@@ -52,8 +52,11 @@ const FeaturedPhones = () => {
               />
             </div>
             <h3 className="font-heading text-lg font-semibold mb-1">{phone.name}</h3>
-            <p className="text-primary font-bold text-xl mb-4">{phone.price}</p>
-            <Button className="w-full bg-gradient-primary text-primary-foreground font-semibold">
+            <p className="text-primary font-bold text-xl mb-4">${phone.price.toLocaleString()}</p>
+            <Button
+              className="w-full bg-gradient-primary text-primary-foreground font-semibold"
+              onClick={() => addItem({ id: phone.id, name: phone.name, price: phone.price, image: phone.image })}
+            >
               <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
             </Button>
           </motion.div>
@@ -61,6 +64,7 @@ const FeaturedPhones = () => {
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default FeaturedPhones;
