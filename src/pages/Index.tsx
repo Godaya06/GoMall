@@ -5,20 +5,17 @@ import ValueProps from "@/components/ValueProps";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
-import { CartProvider } from "@/context/CartContext";
 
 const Index = () => (
-  <CartProvider>
-    <div className="min-h-screen">
-      <Navbar />
-      <Hero />
-      <FeaturedPhones />
-      <ValueProps />
-      <Newsletter />
-      <Footer />
-      <CartDrawer />
-    </div>
-  </CartProvider>
+  <div className="min-h-screen">
+    <Navbar />
+    <Hero />
+    <FeaturedPhones />
+    <ValueProps />
+    <Newsletter />
+    <Footer />
+    <CartDrawer />
+  </div>
 );
 
 export default Index;
