@@ -1,18 +1,23 @@
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/context/CartContext";
 import phone1 from "@/assets/phone1.png";
+import phone2 from "@/assets/phone2.png";
+import phone3 from "@/assets/phone3.png";
 import phone2 from "@/assets/phone2.png";
 import phone3 from "@/assets/phone3.png";
 
 const phones = [
-  { name: "GoPhone Ultra", price: "$899", image: phone1, tag: "Best Seller" },
-  { name: "GoPhone Pro Max", price: "$1,199", image: phone2, tag: "New" },
-  { name: "GoPhone Flex", price: "$749", image: phone3, tag: "Popular" },
+  { id: "ultra", name: "GoPhone Ultra", price: 899, image: phone1, tag: "Best Seller" },
+  { id: "promax", name: "GoPhone Pro Max", price: 1199, image: phone2, tag: "New" },
+  { id: "flex", name: "GoPhone Flex", price: 749, image: phone3, tag: "Popular" },
 ];
 
-const FeaturedPhones = () => (
-  <section id="phones" className="py-24">
+const FeaturedPhones = () => {
+  const { addItem } = useCart();
+
+  return (
     <div className="container">
       <div className="text-center mb-16">
         <h2 className="font-heading text-4xl font-bold mb-4">
