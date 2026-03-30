@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Menu, X, Smartphone } from "lucide-react";
+import { Menu, X, Smartphone, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/context/CartContext";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { totalItems, setIsOpen: openCart } = useCart();
   const links = ["Phones", "Deals", "Trade-In", "Support"];
 
   return (
@@ -23,14 +25,34 @@ const Navbar = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
+          <button onClick={() => openCart(true)} className="relative text-foreground hover:text-primary transition-colors p-2">
+            <ShoppingCart className="h-5 w-5" />
+            {totalItems > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-gradient-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+          </button>
           <Button variant="ghost" size="sm">Sign In</Button>
           <Button size="sm" className="bg-gradient-primary text-primary-foreground font-semibold glow">
             Shop Now
           </Button>
         </div>
+          </Button>
+        </div>
 
-        <button className="md:hidden text-foreground" onClick={() => setOpen(!open)}>
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        <button className="md:hidden flex items-center gap-3 text-foreground">
+          <button onClick={() => openCart(true)} className="relative p-1">
+            <ShoppingCart className="h-5 w-5" />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-gradient-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+          </button>
+          <button onClick={() => setOpen(!open)}>
+            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </button>
       </div>
 
