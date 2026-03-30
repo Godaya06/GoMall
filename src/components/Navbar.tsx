@@ -38,11 +38,9 @@ const Navbar = () => {
             Shop Now
           </Button>
         </div>
-          </Button>
-        </div>
 
-        <button className="md:hidden flex items-center gap-3 text-foreground">
-          <button onClick={() => openCart(true)} className="relative p-1">
+        <div className="md:hidden flex items-center gap-3">
+          <button onClick={() => openCart(true)} className="relative p-1 text-foreground">
             <ShoppingCart className="h-5 w-5" />
             {totalItems > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-gradient-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
@@ -50,10 +48,10 @@ const Navbar = () => {
               </span>
             )}
           </button>
-          <button onClick={() => setOpen(!open)}>
+          <button onClick={() => setOpen(!open)} className="text-foreground">
             {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
-        </button>
+        </div>
       </div>
 
       {open && (
