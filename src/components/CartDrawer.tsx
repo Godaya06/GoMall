@@ -35,7 +35,7 @@ const CartDrawer = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-heading font-semibold text-sm truncate">{item.name}</p>
-                    <p className="text-primary font-bold text-sm">${item.price.toLocaleString()}</p>
+                    <p className="text-primary font-bold text-sm">KES {item.price.toLocaleString()}</p>
                     <div className="flex items-center gap-2 mt-1.5">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -63,7 +63,7 @@ const CartDrawer = () => {
               <Separator className="bg-border" />
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Total</span>
-                <span className="text-xl font-heading font-bold">${totalPrice.toLocaleString()}</span>
+                <span className="text-xl font-heading font-bold">KES {totalPrice.toLocaleString()}</span>
               </div>
               <Button className="w-full bg-gradient-primary text-primary-foreground font-semibold glow text-base h-12">
                 Checkout

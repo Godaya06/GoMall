@@ -7,9 +7,9 @@ import phone2 from "@/assets/phone2.png";
 import phone3 from "@/assets/phone3.png";
 
 const phones = [
-  { id: "ultra", name: "GoPhone Ultra", price: 899, image: phone1, tag: "Best Seller" },
-  { id: "promax", name: "GoPhone Pro Max", price: 1199, image: phone2, tag: "New" },
-  { id: "flex", name: "GoPhone Flex", price: 749, image: phone3, tag: "Popular" },
+  { id: "ultra", name: "GoPhone Ultra", price: 115000, image: phone1, tag: "Best Seller" },
+  { id: "promax", name: "GoPhone Pro Max", price: 155000, image: phone2, tag: "New" },
+  { id: "flex", name: "GoPhone Flex", price: 96000, image: phone3, tag: "Popular" },
 ];
 
 const FeaturedPhones = () => {
@@ -51,7 +51,7 @@ const FeaturedPhones = () => {
                 />
               </div>
               <h3 className="font-heading text-lg font-semibold mb-1">{phone.name}</h3>
-              <p className="text-primary font-bold text-xl mb-4">${phone.price.toLocaleString()}</p>
+              <p className="text-primary font-bold text-xl mb-4">KES {phone.price.toLocaleString()}</p>
               <Button
                 className="w-full bg-gradient-primary text-primary-foreground font-semibold"
                 onClick={() => addItem({ id: phone.id, name: phone.name, price: phone.price, image: phone.image })}
