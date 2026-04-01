@@ -1,33 +1,9 @@
 import { motion } from "framer-motion";
 import { ShoppingCart, Cpu, HardDrive, Camera } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
-import phone1 from "@/assets/phone1.png";
-import phone2 from "@/assets/phone2.png";
-import phone3 from "@/assets/phone3.png";
-import phone4 from "@/assets/phone4.png";
-import phone5 from "@/assets/phone5.png";
-import phone6 from "@/assets/phone6.png";
-
-interface Phone {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  tag: string;
-  ram: string;
-  storage: string;
-  camera: string;
-}
-
-const phones: Phone[] = [
-  { id: "iphone16promax", name: "iPhone 16 Pro Max", price: 239000, image: phone1, tag: "Flagship", ram: "8 GB", storage: "1 TB", camera: "48 MP" },
-  { id: "iphone16pro", name: "iPhone 16 Pro", price: 199000, image: phone2, tag: "Best Seller", ram: "8 GB", storage: "512 GB", camera: "48 MP" },
-  { id: "iphone16", name: "iPhone 16", price: 149000, image: phone3, tag: "New", ram: "8 GB", storage: "256 GB", camera: "48 MP" },
-  { id: "iphone15pro", name: "iPhone 15 Pro", price: 179000, image: phone4, tag: "Popular", ram: "8 GB", storage: "512 GB", camera: "48 MP" },
-  { id: "iphone15", name: "iPhone 15", price: 125000, image: phone5, tag: "Value", ram: "6 GB", storage: "256 GB", camera: "48 MP" },
-  { id: "iphone14", name: "iPhone 14", price: 89000, image: phone6, tag: "Budget", ram: "6 GB", storage: "128 GB", camera: "12 MP" },
-];
+import { phones } from "@/data/phones";
 
 const SpecBadge = ({ icon: Icon, label }: { icon: typeof Cpu; label: string }) => (
   <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -64,18 +40,20 @@ const FeaturedPhones = () => {
               <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
                 {phone.tag}
               </span>
-              <div className="flex justify-center py-6">
-                <img
-                  src={phone.image}
-                  alt={phone.name}
-                  loading="lazy"
-                  width={200}
-                  height={200}
-                  className="h-44 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <h3 className="font-heading text-lg font-semibold mb-1">{phone.name}</h3>
-              <p className="text-primary font-bold text-xl mb-3">KES {phone.price.toLocaleString()}</p>
+              <Link to={`/product/${phone.id}`} className="block">
+                <div className="flex justify-center py-6">
+                  <img
+                    src={phone.image}
+                    alt={phone.name}
+                    loading="lazy"
+                    width={200}
+                    height={200}
+                    className="h-44 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <h3 className="font-heading text-lg font-semibold mb-1">{phone.name}</h3>
+                <p className="text-primary font-bold text-xl mb-3">KES {phone.price.toLocaleString()}</p>
+              </Link>
 
               <div className="flex items-center gap-4 mb-4 py-2 px-3 rounded-lg bg-secondary/50">
                 <SpecBadge icon={Cpu} label={phone.ram} />
