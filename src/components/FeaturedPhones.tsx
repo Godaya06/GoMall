@@ -21,12 +21,12 @@ interface Phone {
 }
 
 const phones: Phone[] = [
-  { id: "ultra", name: "GoPhone Ultra", price: 115000, image: phone1, tag: "Best Seller", ram: "8 GB", storage: "256 GB", camera: "108 MP" },
-  { id: "promax", name: "GoPhone Pro Max", price: 155000, image: phone2, tag: "New", ram: "12 GB", storage: "512 GB", camera: "200 MP" },
-  { id: "flex", name: "GoPhone Flex", price: 96000, image: phone3, tag: "Popular", ram: "6 GB", storage: "128 GB", camera: "64 MP" },
-  { id: "stealth", name: "GoPhone Stealth", price: 135000, image: phone4, tag: "Premium", ram: "12 GB", storage: "256 GB", camera: "50 MP" },
-  { id: "fold", name: "GoPhone Fold", price: 189000, image: phone5, tag: "Flagship", ram: "16 GB", storage: "1 TB", camera: "108 MP" },
-  { id: "lite", name: "GoPhone Lite", price: 45000, image: phone6, tag: "Value", ram: "4 GB", storage: "64 GB", camera: "48 MP" },
+  { id: "iphone16promax", name: "iPhone 16 Pro Max", price: 239000, image: phone1, tag: "Flagship", ram: "8 GB", storage: "1 TB", camera: "48 MP" },
+  { id: "iphone16pro", name: "iPhone 16 Pro", price: 199000, image: phone2, tag: "Best Seller", ram: "8 GB", storage: "512 GB", camera: "48 MP" },
+  { id: "iphone16", name: "iPhone 16", price: 149000, image: phone3, tag: "New", ram: "8 GB", storage: "256 GB", camera: "48 MP" },
+  { id: "iphone15pro", name: "iPhone 15 Pro", price: 179000, image: phone4, tag: "Popular", ram: "8 GB", storage: "512 GB", camera: "48 MP" },
+  { id: "iphone15", name: "iPhone 15", price: 125000, image: phone5, tag: "Value", ram: "6 GB", storage: "256 GB", camera: "48 MP" },
+  { id: "iphone14", name: "iPhone 14", price: 89000, image: phone6, tag: "Budget", ram: "6 GB", storage: "128 GB", camera: "12 MP" },
 ];
 
 const SpecBadge = ({ icon: Icon, label }: { icon: typeof Cpu; label: string }) => (
