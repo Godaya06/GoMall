@@ -40,18 +40,20 @@ const FeaturedPhones = () => {
               <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
                 {phone.tag}
               </span>
-              <div className="flex justify-center py-6">
-                <img
-                  src={phone.image}
-                  alt={phone.name}
-                  loading="lazy"
-                  width={200}
-                  height={200}
-                  className="h-44 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <h3 className="font-heading text-lg font-semibold mb-1">{phone.name}</h3>
-              <p className="text-primary font-bold text-xl mb-3">KES {phone.price.toLocaleString()}</p>
+              <Link to={`/product/${phone.id}`} className="block">
+                <div className="flex justify-center py-6">
+                  <img
+                    src={phone.image}
+                    alt={phone.name}
+                    loading="lazy"
+                    width={200}
+                    height={200}
+                    className="h-44 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <h3 className="font-heading text-lg font-semibold mb-1">{phone.name}</h3>
+                <p className="text-primary font-bold text-xl mb-3">KES {phone.price.toLocaleString()}</p>
+              </Link>
 
               <div className="flex items-center gap-4 mb-4 py-2 px-3 rounded-lg bg-secondary/50">
                 <SpecBadge icon={Cpu} label={phone.ram} />
