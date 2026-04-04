@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, Cpu, HardDrive, Camera } from "lucide-react";
+import { ShoppingCart, Cpu, HardDrive, Camera, ArrowUpDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { phones } from "@/data/phones";
 
 const categories = ["All", "Flagship", "Best Seller", "New", "Popular", "Value", "Budget", "Classic", "Legacy"] as const;
+type SortOption = "default" | "price-asc" | "price-desc";
 
 const SpecBadge = ({ icon: Icon, label }: { icon: typeof Cpu; label: string }) => (
   <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
