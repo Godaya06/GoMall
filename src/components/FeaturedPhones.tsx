@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, Cpu, HardDrive, Camera } from "lucide-react";
+import { ShoppingCart, Cpu, HardDrive, Camera, ArrowUpDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { phones } from "@/data/phones";
 
 const categories = ["All", "Flagship", "Best Seller", "New", "Popular", "Value", "Budget", "Classic", "Legacy"] as const;
+type SortOption = "default" | "price-asc" | "price-desc";
 
 const SpecBadge = ({ icon: Icon, label }: { icon: typeof Cpu; label: string }) => (
   <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -18,8 +19,14 @@ const SpecBadge = ({ icon: Icon, label }: { icon: typeof Cpu; label: string }) =
 const FeaturedPhones = () => {
   const { addItem } = useCart();
   const [active, setActive] = useState<string>("All");
+  const [sort, setSort] = useState<SortOption>("default");
 
-  const filtered = active === "All" ? phones : phones.filter((p) => p.tag === active);
+  const filtered = useMemo(() => {
+    let list = active === "All" ? phones : phones.filter((p) => p.tag === active);
+    if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
+    if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
+    return list;
+  }, [active, sort]);
 
   return (
     <section id="phones" className="py-24">
@@ -45,6 +52,27 @@ const FeaturedPhones = () => {
               }`}
             >
               {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex justify-center gap-2 mb-12">
+          {([
+            ["default", "Default"],
+            ["price-asc", "Price: Low → High"],
+            ["price-desc", "Price: High → Low"],
+          ] as [SortOption, string][]).map(([value, label]) => (
+            <button
+              key={value}
+              onClick={() => setSort(value)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border ${
+                sort === value
+                  ? "bg-accent text-accent-foreground border-primary/60"
+                  : "bg-secondary/30 text-muted-foreground border-border hover:border-primary/30"
+              }`}
+            >
+              <ArrowUpDown className="h-3 w-3" />
+              {label}
             </button>
           ))}
         </div>
