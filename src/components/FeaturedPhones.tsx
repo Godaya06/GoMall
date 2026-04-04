@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart, Cpu, HardDrive, Camera } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { phones } from "@/data/phones";
+
+const categories = ["All", "Flagship", "Best Seller", "New", "Popular", "Value", "Budget", "Classic", "Legacy"] as const;
 
 const SpecBadge = ({ icon: Icon, label }: { icon: typeof Cpu; label: string }) => (
   <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -14,11 +17,14 @@ const SpecBadge = ({ icon: Icon, label }: { icon: typeof Cpu; label: string }) =
 
 const FeaturedPhones = () => {
   const { addItem } = useCart();
+  const [active, setActive] = useState<string>("All");
+
+  const filtered = active === "All" ? phones : phones.filter((p) => p.tag === active);
 
   return (
     <section id="phones" className="py-24">
       <div className="container">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <h2 className="font-heading text-4xl font-bold mb-4">
             Featured <span className="text-gradient">Devices</span>
           </h2>
@@ -27,8 +33,24 @@ const FeaturedPhones = () => {
           </p>
         </div>
 
+        <div className="flex flex-wrap justify-center gap-2 mb-12">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActive(cat)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 border ${
+                active === cat
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-secondary/50 text-muted-foreground border-border hover:border-primary/40"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {phones.map((phone, i) => (
+          {filtered.map((phone, i) => (
             <motion.div
               key={phone.id}
               initial={{ opacity: 0, y: 30 }}
@@ -70,6 +92,10 @@ const FeaturedPhones = () => {
             </motion.div>
           ))}
         </div>
+
+        {filtered.length === 0 && (
+          <p className="text-center text-muted-foreground py-12">No devices found in this category.</p>
+        )}
       </div>
     </section>
   );
