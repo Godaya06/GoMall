@@ -68,9 +68,13 @@ const CartDrawer = () => {
                 <span className="text-muted-foreground">Total</span>
                 <span className="text-xl font-heading font-bold">KES {totalPrice.toLocaleString()}</span>
               </div>
-              <Button className="w-full bg-gradient-primary text-primary-foreground font-semibold glow text-base h-12">
+              <Button
+                className="w-full bg-gradient-primary text-primary-foreground font-semibold glow text-base h-12"
+                onClick={() => setCheckoutOpen(true)}
+              >
                 Checkout
               </Button>
+              <MpesaCheckout open={checkoutOpen} onOpenChange={setCheckoutOpen} />
               <Button variant="ghost" size="sm" className="w-full text-muted-foreground" onClick={clearCart}>
                 Clear Cart
               </Button>
