@@ -19,8 +19,14 @@ const SpecBadge = ({ icon: Icon, label }: { icon: typeof Cpu; label: string }) =
 const FeaturedPhones = () => {
   const { addItem } = useCart();
   const [active, setActive] = useState<string>("All");
+  const [sort, setSort] = useState<SortOption>("default");
 
-  const filtered = active === "All" ? phones : phones.filter((p) => p.tag === active);
+  const filtered = useMemo(() => {
+    let list = active === "All" ? phones : phones.filter((p) => p.tag === active);
+    if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
+    if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
+    return list;
+  }, [active, sort]);
 
   return (
     <section id="phones" className="py-24">
