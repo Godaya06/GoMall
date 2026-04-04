@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { Separator } from "@/components/ui/separator";
+import MpesaCheckout from "@/components/MpesaCheckout";
 
 const CartDrawer = () => {
   const { items, isOpen, setIsOpen, updateQuantity, removeItem, totalPrice, clearCart } = useCart();
