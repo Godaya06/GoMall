@@ -56,7 +56,26 @@ const FeaturedPhones = () => {
           ))}
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="flex justify-center gap-2 mb-12">
+          {([
+            ["default", "Default"],
+            ["price-asc", "Price: Low → High"],
+            ["price-desc", "Price: High → Low"],
+          ] as [SortOption, string][]).map(([value, label]) => (
+            <button
+              key={value}
+              onClick={() => setSort(value)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border ${
+                sort === value
+                  ? "bg-accent text-accent-foreground border-primary/60"
+                  : "bg-secondary/30 text-muted-foreground border-border hover:border-primary/30"
+              }`}
+            >
+              <ArrowUpDown className="h-3 w-3" />
+              {label}
+            </button>
+          ))}
+        </div>
           {filtered.map((phone, i) => (
             <motion.div
               key={phone.id}
