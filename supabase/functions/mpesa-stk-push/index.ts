@@ -1,3 +1,5 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -7,9 +9,8 @@ const CONSUMER_KEY = Deno.env.get("MPESA_CONSUMER_KEY")!;
 const CONSUMER_SECRET = Deno.env.get("MPESA_CONSUMER_SECRET")!;
 const TILL_NUMBER = "4720870";
 const BUSINESS_SHORT_CODE = "4720870";
-// For Buy Goods (Till), use the sandbox passkey; replace with production passkey when going live
 const PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
-const BASE_URL = "https://api.safaricom.co.ke"; // Production
+const BASE_URL = "https://api.safaricom.co.ke";
 
 function getTimestamp(): string {
   const now = new Date();
@@ -42,7 +43,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { phone, amount } = await req.json();
+    const { phone, amount, items } = await req.json();
 
     if (!phone || !amount) {
       return new Response(JSON.stringify({ error: "Phone and amount are required" }), {
@@ -82,10 +83,31 @@ Deno.serve(async (req) => {
     const stkData = await stkRes.json();
 
     if (stkData.ResponseCode === "0") {
+      // Save order to database
+      const supabaseAdmin = createClient(
+        Deno.env.get("SUPABASE_URL")!,
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+      );
+
+      const { data: order, error: dbError } = await supabaseAdmin
+        .from("orders")
+        .insert({
+          phone_number: formattedPhone,
+          total_amount: Math.round(amount),
+          status: "pending",
+          checkout_request_id: stkData.CheckoutRequestID,
+          items: items || [],
+        })
+        .select("id")
+        .single();
+
+      if (dbError) console.error("Order save error:", dbError);
+
       return new Response(JSON.stringify({
         success: true,
         message: "STK Push sent. Check your phone.",
         checkoutRequestId: stkData.CheckoutRequestID,
+        orderId: order?.id,
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
