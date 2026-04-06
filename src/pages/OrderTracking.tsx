@@ -57,10 +57,10 @@ const OrderTracking = () => {
     setLoading(false);
   };
 
-  // Auto-search if phone param provided
-  useState(() => {
+  useEffect(() => {
     if (searchParams.get("phone")) handleSearch();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
