@@ -26,6 +26,9 @@ const Navbar = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
+          <Link to="/orders" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+            <Package className="h-4 w-4" /> Orders
+          </Link>
           <button onClick={() => openCart(true)} className="relative text-foreground hover:text-primary transition-colors p-2">
             <ShoppingCart className="h-5 w-5" />
             {totalItems > 0 && (
