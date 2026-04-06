@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Menu, X, Smartphone, ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Menu, X, Smartphone, ShoppingCart, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 
