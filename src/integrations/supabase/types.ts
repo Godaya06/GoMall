@@ -14,7 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      orders: {
+        Row: {
+          checkout_request_id: string | null
+          created_at: string
+          id: string
+          items: Json
+          mpesa_receipt: string | null
+          phone_number: string
+          status: string
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          checkout_request_id?: string | null
+          created_at?: string
+          id?: string
+          items?: Json
+          mpesa_receipt?: string | null
+          phone_number: string
+          status?: string
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          checkout_request_id?: string | null
+          created_at?: string
+          id?: string
+          items?: Json
+          mpesa_receipt?: string | null
+          phone_number?: string
+          status?: string
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

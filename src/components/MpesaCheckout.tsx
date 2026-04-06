@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { Link } from "react-router-dom";
 
 interface MpesaCheckoutProps {
   open: boolean;
@@ -17,6 +18,7 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [orderPhone, setOrderPhone] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,13 +30,18 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("mpesa-stk-push", {
-        body: { phone, amount: totalPrice },
+        body: {
+          phone,
+          amount: totalPrice,
+          items: items.map((i) => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
+        },
       });
 
       if (error) throw error;
 
       if (data?.success) {
         setSent(true);
+        setOrderPhone(phone);
         toast({ title: "STK Push Sent!", description: "Check your phone and enter your M-Pesa PIN." });
       } else {
         toast({ title: "Payment failed", description: data?.message || "Try again", variant: "destructive" });
@@ -76,6 +83,13 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
             <Button onClick={handleClose} className="w-full bg-gradient-primary text-primary-foreground">
               Done
             </Button>
+            <Link
+              to={`/orders?phone=${encodeURIComponent(orderPhone)}`}
+              onClick={handleClose}
+              className="text-sm text-primary underline hover:text-primary/80"
+            >
+              Track your order →
+            </Link>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">

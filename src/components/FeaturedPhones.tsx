@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, Cpu, HardDrive, Camera, ArrowUpDown } from "lucide-react";
+import { ShoppingCart, Cpu, HardDrive, Camera, ArrowUpDown, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
@@ -20,13 +20,18 @@ const FeaturedPhones = () => {
   const { addItem } = useCart();
   const [active, setActive] = useState<string>("All");
   const [sort, setSort] = useState<SortOption>("default");
+  const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
     let list = active === "All" ? phones : phones.filter((p) => p.tag === active);
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter((p) => p.name.toLowerCase().includes(q));
+    }
     if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
     if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
     return list;
-  }, [active, sort]);
+  }, [active, sort, search]);
 
   return (
     <section id="phones" className="py-24">
@@ -38,6 +43,17 @@ const FeaturedPhones = () => {
           <p className="text-muted-foreground max-w-md mx-auto">
             Handpicked flagships with the best specs, design, and value.
           </p>
+        </div>
+
+        <div className="relative max-w-md mx-auto mb-8">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search iPhones... e.g. iPhone 16 Pro Max"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 rounded-full bg-secondary/50 border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
+          />
         </div>
 
         <div className="flex flex-wrap justify-center gap-2 mb-12">
