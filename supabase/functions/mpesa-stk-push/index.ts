@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
       BusinessShortCode: BUSINESS_SHORT_CODE,
       Password: password,
       Timestamp: timestamp,
-      TransactionType: "CustomerBuyGoodsOnline",
+      TransactionType: TRANSACTION_TYPE,
       Amount: Math.round(amount),
       PartyA: formattedPhone,
       PartyB: TILL_NUMBER,
