@@ -10,7 +10,7 @@ const CONSUMER_SECRET = Deno.env.get("MPESA_CONSUMER_SECRET")!;
 const TILL_NUMBER = "4720870";
 const BUSINESS_SHORT_CODE = "4720870";
 const PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
-const BASE_URL = "https://api.safaricom.co.ke";
+const BASE_URL = "https://sandbox.safaricom.co.ke";
 
 function getTimestamp(): string {
   const now = new Date();
