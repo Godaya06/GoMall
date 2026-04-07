@@ -7,10 +7,11 @@ const corsHeaders = {
 
 const CONSUMER_KEY = Deno.env.get("MPESA_CONSUMER_KEY")!;
 const CONSUMER_SECRET = Deno.env.get("MPESA_CONSUMER_SECRET")!;
-const TILL_NUMBER = "4720870";
-const BUSINESS_SHORT_CODE = "4720870";
+const TILL_NUMBER = "174379";
+const BUSINESS_SHORT_CODE = "174379";
 const PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
 const BASE_URL = "https://sandbox.safaricom.co.ke";
+const TRANSACTION_TYPE = "CustomerPayBillOnline";
 
 function getTimestamp(): string {
   const now = new Date();
