@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Smartphone, ShoppingCart, Package } from "lucide-react";
+import { Menu, X, Smartphone, ShoppingCart, Package, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { totalItems, setIsOpen: openCart } = useCart();
+  const { user, profile, signOut } = useAuth();
   const links = ["Phones", "Deals", "Trade-In", "Support"];
 
   return (
@@ -37,10 +46,39 @@ const Navbar = () => {
               </span>
             )}
           </button>
-          <Button variant="ghost" size="sm">Sign In</Button>
-          <Button size="sm" className="bg-gradient-primary text-primary-foreground font-semibold glow">
-            Shop Now
-          </Button>
+
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  <span className="max-w-[100px] truncate text-sm">
+                    {profile?.display_name || user.email || user.phone}
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem className="text-xs text-muted-foreground" disabled>
+                  {user.email || user.phone}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={signOut} className="text-destructive focus:text-destructive">
+                  <LogOut className="h-4 w-4 mr-2" /> Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Link to="/auth">
+                <Button variant="ghost" size="sm">Sign In</Button>
+              </Link>
+              <Link to="/auth">
+                <Button size="sm" className="bg-gradient-primary text-primary-foreground font-semibold glow">
+                  Shop Now
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
         <div className="md:hidden flex items-center gap-3">
@@ -66,9 +104,20 @@ const Navbar = () => {
                 {l}
               </a>
             ))}
-            <Button size="sm" className="bg-gradient-primary text-primary-foreground font-semibold mt-2">
-              Shop Now
-            </Button>
+            <Link to="/orders" className="text-sm text-muted-foreground py-2 flex items-center gap-1">
+              <Package className="h-4 w-4" /> Orders
+            </Link>
+            {user ? (
+              <Button variant="ghost" size="sm" onClick={signOut} className="justify-start text-destructive">
+                <LogOut className="h-4 w-4 mr-2" /> Sign Out
+              </Button>
+            ) : (
+              <Link to="/auth">
+                <Button size="sm" className="bg-gradient-primary text-primary-foreground font-semibold mt-2 w-full">
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       )}
