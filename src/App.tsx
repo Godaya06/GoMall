@@ -7,6 +7,7 @@ import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import Index from "./pages/Index.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
+import ProductCareDetail from "./pages/ProductCareDetail.tsx";
 import OrderTracking from "./pages/OrderTracking.tsx";
 import Auth from "./pages/Auth.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -24,6 +25,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/care/:id" element={<ProductCareDetail />} />
               <Route path="/orders" element={<OrderTracking />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="*" element={<NotFound />} />

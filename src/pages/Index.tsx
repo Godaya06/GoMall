@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import FeaturedPhones from "@/components/FeaturedPhones";
 import FeaturedProducts from "@/components/FeaturedProducts";
+import DealsSection from "@/components/DealsSection";
 import ValueProps from "@/components/ValueProps";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
@@ -49,6 +50,7 @@ const Index = () => {
 
       {activeTab === "phones" ? <FeaturedPhones /> : <FeaturedProducts />}
 
+      <DealsSection />
       <ValueProps />
       <Newsletter />
       <Footer />
