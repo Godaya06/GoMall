@@ -16,7 +16,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { totalItems, setIsOpen: openCart } = useCart();
   const { user, profile, signOut } = useAuth();
-  const links = ["Phones", "Deals", "Trade-In", "Support"];
+  const links = ["Phones", "Products", "Deals", "Support"];
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-border">
