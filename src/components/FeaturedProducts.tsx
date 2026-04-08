@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, ArrowUpDown, Search, Droplets, Sparkles, Sun } from "lucide-react";
+import { ShoppingCart, ArrowUpDown, Search, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { personalCareProducts, personalCareCategories } from "@/data/products";
