@@ -106,20 +106,22 @@ const FeaturedProducts = () => {
                 {product.category}
               </span>
 
-              <div className="flex justify-center py-6">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  loading="lazy"
-                  width={200}
-                  height={200}
-                  className="h-44 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
+              <Link to={`/care/${product.id}`} className="block">
+                <div className="flex justify-center py-6">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    loading="lazy"
+                    width={200}
+                    height={200}
+                    className="h-44 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
 
-              <h3 className="font-heading text-lg font-semibold mb-1">{product.name}</h3>
-              <p className="text-primary font-bold text-xl mb-2">KES {product.price.toLocaleString()}</p>
-              <p className="text-muted-foreground text-xs mb-3 line-clamp-2">{product.description}</p>
+                <h3 className="font-heading text-lg font-semibold mb-1">{product.name}</h3>
+                <p className="text-primary font-bold text-xl mb-2">KES {product.price.toLocaleString()}</p>
+                <p className="text-muted-foreground text-xs mb-3 line-clamp-2">{product.description}</p>
+              </Link>
 
               <div className="flex items-center gap-4 mb-4 py-2 px-3 rounded-lg bg-secondary/50">
                 {product.details.map((d) => (
