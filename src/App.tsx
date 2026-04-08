@@ -181,6 +181,50 @@ export const products: Product[] = [
     id: 13,
     name: "Nice & Lovely Lotion",
     category: "Health & Beauty",
+    import React from 'react';
+// Using your shortcut alias '@/' to point to the src folder
+import { products, Product } from '@/data/products';
+import './App.css';
+
+const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
+  <div className="product-card">
+    <div className="image-container">
+      <img src={product.image} alt={product.name} loading="lazy" />
+      <span className="category-badge">{product.category}</span>
+    </div>
+    <div className="product-details">
+      <p className="brand-name">{product.brand}</p>
+      <h3 className="product-title">{product.name}</h3>
+      <p className="product-desc">{product.description}</p>
+      <div className="price-row">
+        <span className="price-tag">{product.price}</span>
+        <button className="view-btn">View Details</button>
+      </div>
+    </div>
+  </div>
+);
+
+export default function App() {
+  return (
+    <div className="app-container">
+      <header className="app-header">
+        <h1>Kenya Retail Hub 🇰🇪</h1>
+        <p>Discover top Kenyan brands and premium global products</p>
+      </header>
+
+      <main className="product-grid">
+        {products.length > 0 ? (
+          products.map((item) => (
+            <ProductCard key={item.id} product={item} />
+          ))
+        ) : (
+          <p className="error-msg">No products found. Check your data file!</p>
+        )}
+      </main>
+    </div>
+  );
+}
+
     price: "KSh 450",
     size: "400ml",
     brand: "Nice & Lovely 🇰🇪",
