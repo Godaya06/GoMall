@@ -420,4 +420,34 @@ export const personalCareProducts: Product[] = [
     ingredients: "Mica, Talc, Jojoba Oil, Silica, Iron Oxides, Gold Mica",
     howToUse: "Use darker shades to contour jawline, cheekbones, and nose. Apply highlight to high points of face.",
   },
+]
+  export const products = [
+  {
+    id: 1,
+    name: "Vitron 32\" Smart TV",
+    category: "TV & Video",
+    price: "KSh 12,499",
+    size: "32-inch",
+    image: "https://unsplash.com",
+    brand: "Vitron"
+  },
+  {
+    id: 2,
+    name: "Enda Iten Running Shoes",
+    category: "Shoes",
+    price: "KSh 13,500",
+    size: "UK 4 - 12",
+    image: "https://unsplash.com",
+    brand: "Enda 🇰🇪"
+  },
+  {
+    id: 3,
+    name: "Ramtons RM/581 Fridge",
+    category: "Home & Kitchen",
+    price: "KSh 24,995",
+    size: "90 Liters",
+    image: "https://unsplash.com",
+    brand: "Ramtons"
+  }
 ];
+
