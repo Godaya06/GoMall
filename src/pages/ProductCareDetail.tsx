@@ -7,6 +7,8 @@ import { personalCareProducts } from "@/data/products";
 import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer";
 import Footer from "@/components/Footer";
+import WishlistButton from "@/components/WishlistButton";
+import ProductReviews from "@/components/ProductReviews";
 
 const ProductCareDetail = () => {
   const { id } = useParams<{ id: string }>();
