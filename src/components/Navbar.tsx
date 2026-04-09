@@ -107,6 +107,9 @@ const Navbar = () => {
                 {l}
               </a>
             ))}
+            <Link to="/wishlist" className="text-sm text-muted-foreground py-2 flex items-center gap-1">
+              <Heart className="h-4 w-4" /> Wishlist
+            </Link>
             <Link to="/orders" className="text-sm text-muted-foreground py-2 flex items-center gap-1">
               <Package className="h-4 w-4" /> Orders
             </Link>

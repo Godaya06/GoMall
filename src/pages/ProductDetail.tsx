@@ -118,6 +118,11 @@ const ProductDetail = () => {
               </Button>
             </motion.div>
           </div>
+
+          {/* Reviews */}
+          <div className="mt-16">
+            <ProductReviews productId={phone.id} productType="phone" />
+          </div>
         </div>
       </main>
 

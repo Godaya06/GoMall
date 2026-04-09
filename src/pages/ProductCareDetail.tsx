@@ -143,6 +143,11 @@ const ProductCareDetail = () => {
               </Button>
             </motion.div>
           </div>
+
+          {/* Reviews */}
+          <div className="mt-16">
+            <ProductReviews productId={product.id} productType="care" />
+          </div>
         </div>
       </main>
 
