@@ -63,6 +63,9 @@ const ProductDetail = () => {
               <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
                 {phone.tag}
               </div>
+              <div className="absolute top-4 right-4">
+                <WishlistButton productId={phone.id} productType="phone" />
+              </div>
               <img
                 src={phone.image}
                 alt={phone.name}
