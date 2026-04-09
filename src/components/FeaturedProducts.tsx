@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart, ArrowUpDown, Search, Sparkles } from "lucide-react";
+import WishlistButton from "@/components/WishlistButton";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
@@ -102,9 +103,12 @@ const FeaturedProducts = () => {
               transition={{ delay: i * 0.1, duration: 0.5 }}
               className="group relative bg-card rounded-2xl border border-border p-6 card-shadow hover:border-primary/40 transition-all duration-300"
             >
-              <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
-                {product.category}
-              </span>
+              <div className="absolute top-4 right-4 flex items-center gap-2">
+                <WishlistButton productId={product.id} productType="care" className="z-10" />
+                <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
+                  {product.category}
+                </span>
+              </div>
 
               <Link to={`/care/${product.id}`} className="block">
                 <div className="flex justify-center py-6">

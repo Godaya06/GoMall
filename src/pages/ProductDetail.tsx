@@ -7,6 +7,8 @@ import { phones } from "@/data/phones";
 import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer";
 import Footer from "@/components/Footer";
+import WishlistButton from "@/components/WishlistButton";
+import ProductReviews from "@/components/ProductReviews";
 
 const SpecRow = ({ icon: Icon, label, value }: { icon: typeof Cpu; label: string; value: string }) => (
   <div className="flex items-center gap-3 py-3 border-b border-border last:border-0">
@@ -61,6 +63,9 @@ const ProductDetail = () => {
               <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
                 {phone.tag}
               </div>
+              <div className="absolute top-4 right-4">
+                <WishlistButton productId={phone.id} productType="phone" />
+              </div>
               <img
                 src={phone.image}
                 alt={phone.name}
@@ -112,6 +117,11 @@ const ProductDetail = () => {
                 <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart — KES {phone.price.toLocaleString()}
               </Button>
             </motion.div>
+          </div>
+
+          {/* Reviews */}
+          <div className="mt-16">
+            <ProductReviews productId={phone.id} productType="phone" />
           </div>
         </div>
       </main>

@@ -7,6 +7,8 @@ import { personalCareProducts } from "@/data/products";
 import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer";
 import Footer from "@/components/Footer";
+import WishlistButton from "@/components/WishlistButton";
+import ProductReviews from "@/components/ProductReviews";
 
 const ProductCareDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -55,6 +57,9 @@ const ProductCareDetail = () => {
             >
               <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
                 {product.category}
+              </div>
+              <div className="absolute top-4 right-4">
+                <WishlistButton productId={product.id} productType="care" />
               </div>
               <img
                 src={product.image}
@@ -137,6 +142,11 @@ const ProductCareDetail = () => {
                 {product.price.toLocaleString()}
               </Button>
             </motion.div>
+          </div>
+
+          {/* Reviews */}
+          <div className="mt-16">
+            <ProductReviews productId={product.id} productType="care" />
           </div>
         </div>
       </main>
