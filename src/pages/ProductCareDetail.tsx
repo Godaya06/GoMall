@@ -58,6 +58,9 @@ const ProductCareDetail = () => {
               <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
                 {product.category}
               </div>
+              <div className="absolute top-4 right-4">
+                <WishlistButton productId={product.id} productType="care" />
+              </div>
               <img
                 src={product.image}
                 alt={product.name}
