@@ -7,6 +7,8 @@ import { phones } from "@/data/phones";
 import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer";
 import Footer from "@/components/Footer";
+import WishlistButton from "@/components/WishlistButton";
+import ProductReviews from "@/components/ProductReviews";
 
 const SpecRow = ({ icon: Icon, label, value }: { icon: typeof Cpu; label: string; value: string }) => (
   <div className="flex items-center gap-3 py-3 border-b border-border last:border-0">
