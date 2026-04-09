@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart, ArrowUpDown, Search, Sparkles } from "lucide-react";
+import WishlistButton from "@/components/WishlistButton";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
