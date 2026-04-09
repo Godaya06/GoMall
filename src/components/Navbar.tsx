@@ -35,6 +35,9 @@ const Navbar = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
+          <Link to="/wishlist" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+            <Heart className="h-4 w-4" /> Wishlist
+          </Link>
           <Link to="/orders" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
             <Package className="h-4 w-4" /> Orders
           </Link>
