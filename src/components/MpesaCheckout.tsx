@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { Phone, Loader2, CheckCircle } from "lucide-react";
+import { Phone, Loader2, CheckCircle, MapPin } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCart } from "@/context/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
+import { KENYA_COUNTIES } from "@/data/kenya-counties";
 
 interface MpesaCheckoutProps {
   open: boolean;
@@ -16,6 +19,9 @@ interface MpesaCheckoutProps {
 const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
   const { totalPrice, items, clearCart } = useCart();
   const [phone, setPhone] = useState("");
+  const [county, setCounty] = useState("");
+  const [town, setTown] = useState("");
+  const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [orderPhone, setOrderPhone] = useState("");
@@ -26,6 +32,10 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
       toast({ title: "Invalid phone number", description: "Enter a valid M-Pesa number", variant: "destructive" });
       return;
     }
+    if (!county || !town.trim()) {
+      toast({ title: "Delivery location required", description: "Select your county and enter your town", variant: "destructive" });
+      return;
+    }
 
     setLoading(true);
     try {
@@ -34,6 +44,9 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
           phone,
           amount: totalPrice,
           items: items.map((i) => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
+          county,
+          town,
+          delivery_address: address,
         },
       });
 
@@ -42,7 +55,7 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
       if (data?.success) {
         setSent(true);
         setOrderPhone(phone);
-        toast({ title: "STK Push Sent!", description: "Check your phone and enter your M-Pesa PIN." });
+        toast({ title: "STK Push Sent!", description: "Check your phone and enter your M-Pesa PIN to pay GoMall." });
       } else {
         toast({ title: "Payment failed", description: data?.message || "Try again", variant: "destructive" });
       }
@@ -71,7 +84,7 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
             M-Pesa Checkout
           </DialogTitle>
           <DialogDescription>
-            Pay KES {totalPrice.toLocaleString()} via M-Pesa to Till {`4720870`}
+            Pay KES {totalPrice.toLocaleString()} to <span className="font-semibold text-primary">GoMall</span> via M-Pesa
           </DialogDescription>
         </DialogHeader>
 
@@ -118,6 +131,46 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
                   disabled={loading}
                 />
               </div>
+
+              <div className="space-y-3 pt-1">
+                <div className="flex items-center gap-1.5 text-sm font-semibold">
+                  <MapPin className="h-4 w-4 text-primary" /> Delivery Location (Kenya)
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">County</label>
+                  <Select value={county} onValueChange={setCounty} disabled={loading}>
+                    <SelectTrigger className="bg-secondary border-border h-11">
+                      <SelectValue placeholder="Select your county" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-64">
+                      {KENYA_COUNTIES.map((c) => (
+                        <SelectItem key={c} value={c}>{c}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Town / Area</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g. Westlands"
+                    value={town}
+                    onChange={(e) => setTown(e.target.value)}
+                    className="bg-secondary border-border h-11"
+                    disabled={loading}
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Delivery Address (optional)</label>
+                  <Textarea
+                    placeholder="Building, street, landmark, instructions..."
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="bg-secondary border-border min-h-[60px]"
+                    disabled={loading}
+                  />
+                </div>
+              </div>
             </div>
 
             <Button
@@ -130,7 +183,7 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Sending STK Push...
                 </>
               ) : (
-                `Pay KES ${totalPrice.toLocaleString()}`
+                `Pay KES ${totalPrice.toLocaleString()} to GoMall`
               )}
             </Button>
           </form>

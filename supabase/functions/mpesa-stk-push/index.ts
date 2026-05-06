@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { phone, amount, items } = await req.json();
+    const { phone, amount, items, county, town, delivery_address } = await req.json();
 
     if (!phone || !amount) {
       return new Response(JSON.stringify({ error: "Phone and amount are required" }), {
@@ -68,8 +68,8 @@ Deno.serve(async (req) => {
       PartyB: TILL_NUMBER,
       PhoneNumber: formattedPhone,
       CallBackURL: `${Deno.env.get("SUPABASE_URL")}/functions/v1/mpesa-callback`,
-      AccountReference: "PhoneStore",
-      TransactionDesc: "Phone Purchase",
+      AccountReference: "GoMall",
+      TransactionDesc: "Pay to GoMall",
     };
 
     const stkRes = await fetch(`${BASE_URL}/mpesa/stkpush/v1/processrequest`, {
@@ -98,6 +98,9 @@ Deno.serve(async (req) => {
           status: "pending",
           checkout_request_id: stkData.CheckoutRequestID,
           items: items || [],
+          county: county || null,
+          town: town || null,
+          delivery_address: delivery_address || null,
         })
         .select("id")
         .single();
