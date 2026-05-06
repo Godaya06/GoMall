@@ -68,8 +68,8 @@ Deno.serve(async (req) => {
       PartyB: TILL_NUMBER,
       PhoneNumber: formattedPhone,
       CallBackURL: `${Deno.env.get("SUPABASE_URL")}/functions/v1/mpesa-callback`,
-      AccountReference: "PhoneStore",
-      TransactionDesc: "Phone Purchase",
+      AccountReference: "GoMall",
+      TransactionDesc: "Pay to GoMall",
     };
 
     const stkRes = await fetch(`${BASE_URL}/mpesa/stkpush/v1/processrequest`, {
