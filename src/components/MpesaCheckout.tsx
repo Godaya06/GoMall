@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { Phone, Loader2, CheckCircle } from "lucide-react";
+import { Phone, Loader2, CheckCircle, MapPin } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCart } from "@/context/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
+import { KENYA_COUNTIES } from "@/data/kenya-counties";
 
 interface MpesaCheckoutProps {
   open: boolean;
