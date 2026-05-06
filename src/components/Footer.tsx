@@ -1,4 +1,4 @@
-import { Smartphone } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 
 const Footer = () => (
   <footer className="border-t border-border py-12">
@@ -6,11 +6,11 @@ const Footer = () => (
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         <div>
           <a href="/" className="flex items-center gap-2 font-heading text-lg font-bold mb-4">
-            <Smartphone className="h-5 w-5 text-primary" />
-            <span className="text-gradient">GoPhones</span>
+            <ShoppingBag className="h-5 w-5 text-primary" />
+            <span className="text-gradient">GoMall</span>
           </a>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Premium smartphones. Unbeatable prices. Your next upgrade starts here.
+            Phones, beauty & personal care. Your everyday mall, online.
           </p>
         </div>
         {[
@@ -31,7 +31,7 @@ const Footer = () => (
         ))}
       </div>
       <div className="border-t border-border pt-8 text-center text-xs text-muted-foreground">
-        © 2026 GoPhones. All rights reserved.
+        © 2026 GoMall. All rights reserved.
       </div>
     </div>
   </footer>
