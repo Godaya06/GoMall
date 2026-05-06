@@ -19,6 +19,9 @@ interface MpesaCheckoutProps {
 const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
   const { totalPrice, items, clearCart } = useCart();
   const [phone, setPhone] = useState("");
+  const [county, setCounty] = useState("");
+  const [town, setTown] = useState("");
+  const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [orderPhone, setOrderPhone] = useState("");
@@ -29,6 +32,10 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
       toast({ title: "Invalid phone number", description: "Enter a valid M-Pesa number", variant: "destructive" });
       return;
     }
+    if (!county || !town.trim()) {
+      toast({ title: "Delivery location required", description: "Select your county and enter your town", variant: "destructive" });
+      return;
+    }
 
     setLoading(true);
     try {
@@ -37,6 +44,9 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
           phone,
           amount: totalPrice,
           items: items.map((i) => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
+          county,
+          town,
+          delivery_address: address,
         },
       });
 
@@ -45,7 +55,7 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
       if (data?.success) {
         setSent(true);
         setOrderPhone(phone);
-        toast({ title: "STK Push Sent!", description: "Check your phone and enter your M-Pesa PIN." });
+        toast({ title: "STK Push Sent!", description: "Check your phone and enter your M-Pesa PIN to pay GoMall." });
       } else {
         toast({ title: "Payment failed", description: data?.message || "Try again", variant: "destructive" });
       }
