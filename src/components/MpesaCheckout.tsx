@@ -84,7 +84,7 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
             M-Pesa Checkout
           </DialogTitle>
           <DialogDescription>
-            Pay KES {totalPrice.toLocaleString()} via M-Pesa to Till {`4720870`}
+            Pay KES {totalPrice.toLocaleString()} to <span className="font-semibold text-primary">GoMall</span> via M-Pesa
           </DialogDescription>
         </DialogHeader>
 
