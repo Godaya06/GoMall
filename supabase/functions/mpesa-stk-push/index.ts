@@ -98,6 +98,9 @@ Deno.serve(async (req) => {
           status: "pending",
           checkout_request_id: stkData.CheckoutRequestID,
           items: items || [],
+          county: county || null,
+          town: town || null,
+          delivery_address: delivery_address || null,
         })
         .select("id")
         .single();
