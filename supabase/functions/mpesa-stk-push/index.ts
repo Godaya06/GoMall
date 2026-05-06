@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { phone, amount, items } = await req.json();
+    const { phone, amount, items, county, town, delivery_address } = await req.json();
 
     if (!phone || !amount) {
       return new Response(JSON.stringify({ error: "Phone and amount are required" }), {
