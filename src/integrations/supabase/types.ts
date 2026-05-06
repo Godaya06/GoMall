@@ -17,35 +17,44 @@ export type Database = {
       orders: {
         Row: {
           checkout_request_id: string | null
+          county: string | null
           created_at: string
+          delivery_address: string | null
           id: string
           items: Json
           mpesa_receipt: string | null
           phone_number: string
           status: string
           total_amount: number
+          town: string | null
           updated_at: string
         }
         Insert: {
           checkout_request_id?: string | null
+          county?: string | null
           created_at?: string
+          delivery_address?: string | null
           id?: string
           items?: Json
           mpesa_receipt?: string | null
           phone_number: string
           status?: string
           total_amount: number
+          town?: string | null
           updated_at?: string
         }
         Update: {
           checkout_request_id?: string | null
+          county?: string | null
           created_at?: string
+          delivery_address?: string | null
           id?: string
           items?: Json
           mpesa_receipt?: string | null
           phone_number?: string
           status?: string
           total_amount?: number
+          town?: string | null
           updated_at?: string
         }
         Relationships: []
