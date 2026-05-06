@@ -131,6 +131,46 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
                   disabled={loading}
                 />
               </div>
+
+              <div className="space-y-3 pt-1">
+                <div className="flex items-center gap-1.5 text-sm font-semibold">
+                  <MapPin className="h-4 w-4 text-primary" /> Delivery Location (Kenya)
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">County</label>
+                  <Select value={county} onValueChange={setCounty} disabled={loading}>
+                    <SelectTrigger className="bg-secondary border-border h-11">
+                      <SelectValue placeholder="Select your county" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-64">
+                      {KENYA_COUNTIES.map((c) => (
+                        <SelectItem key={c} value={c}>{c}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Town / Area</label>
+                  <Input
+                    type="text"
+                    placeholder="e.g. Westlands"
+                    value={town}
+                    onChange={(e) => setTown(e.target.value)}
+                    className="bg-secondary border-border h-11"
+                    disabled={loading}
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">Delivery Address (optional)</label>
+                  <Textarea
+                    placeholder="Building, street, landmark, instructions..."
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="bg-secondary border-border min-h-[60px]"
+                    disabled={loading}
+                  />
+                </div>
+              </div>
             </div>
 
             <Button
