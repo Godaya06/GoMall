@@ -93,7 +93,7 @@ const Auth = () => {
         <CardHeader className="text-center space-y-2">
           <a href="/" className="flex items-center justify-center gap-2 mb-2">
             <Smartphone className="h-7 w-7 text-primary" />
-            <span className="font-heading text-2xl font-bold text-gradient">GoPhones</span>
+            <span className="font-heading text-2xl font-bold text-gradient">GoMall</span>
           </a>
           <CardTitle className="text-xl">
             {isLogin ? "Welcome back" : "Create your account"}
@@ -101,7 +101,7 @@ const Auth = () => {
           <CardDescription>
             {isLogin
               ? "Sign in to track orders & manage your account"
-              : "Join GoPhones for the best deals on phones"}
+              : "Join GoMall for the best deals on phones"}
           </CardDescription>
         </CardHeader>
 

@@ -51,7 +51,7 @@ const Hero = () => (
         transition={{ duration: 0.8, delay: 0.2 }}
         className="flex justify-center"
       >
-        <img src={heroPhone} alt="GoPhones flagship device" width={500} height={500} className="drop-shadow-2xl" />
+        <img src={heroPhone} alt="GoMall flagship device" width={500} height={500} className="drop-shadow-2xl" />
       </motion.div>
     </div>
   </section>
