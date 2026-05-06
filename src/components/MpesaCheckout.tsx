@@ -183,7 +183,7 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Sending STK Push...
                 </>
               ) : (
-                `Pay KES ${totalPrice.toLocaleString()}`
+                `Pay KES ${totalPrice.toLocaleString()} to GoMall`
               )}
             </Button>
           </form>
