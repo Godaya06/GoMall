@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Phone, Loader2, CheckCircle, MapPin } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Phone, Loader2, CheckCircle, MapPin, Truck } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,8 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useCart } from "@/context/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { KENYA_COUNTIES } from "@/data/kenya-counties";
+import { calculateDeliveryFee, getDeliveryEstimate } from "@/data/delivery-fees";
 
 interface MpesaCheckoutProps {
   open: boolean;
@@ -18,13 +19,16 @@ interface MpesaCheckoutProps {
 
 const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
   const { totalPrice, items, clearCart } = useCart();
+  const navigate = useNavigate();
   const [phone, setPhone] = useState("");
   const [county, setCounty] = useState("");
   const [town, setTown] = useState("");
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [orderPhone, setOrderPhone] = useState("");
+
+  const deliveryFee = useMemo(() => calculateDeliveryFee(county, town), [county, town]);
+  const grandTotal = totalPrice + deliveryFee;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +46,8 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
       const { data, error } = await supabase.functions.invoke("mpesa-stk-push", {
         body: {
           phone,
-          amount: totalPrice,
+          amount: grandTotal,
+          delivery_fee: deliveryFee,
           items: items.map((i) => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity })),
           county,
           town,
@@ -54,8 +59,13 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
 
       if (data?.success) {
         setSent(true);
-        setOrderPhone(phone);
-        toast({ title: "STK Push Sent!", description: "Check your phone and enter your M-Pesa PIN to pay GoMall." });
+        toast({ title: "STK Push Sent!", description: "Enter your M-Pesa PIN to pay GoMall." });
+        // Navigate to confirmation page
+        const orderId = data.orderId;
+        clearCart();
+        onOpenChange(false);
+        setSent(false);
+        navigate(`/order-confirmation/${orderId}?phone=${encodeURIComponent(phone)}`);
       } else {
         toast({ title: "Payment failed", description: data?.message || "Try again", variant: "destructive" });
       }
@@ -67,24 +77,23 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
   };
 
   const handleClose = () => {
-    if (sent) {
-      clearCart();
-      setSent(false);
-    }
     setPhone("");
+    setCounty("");
+    setTown("");
+    setAddress("");
     onOpenChange(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="bg-card border-border sm:max-w-md">
+      <DialogContent className="bg-card border-border sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-heading flex items-center gap-2">
             <Phone className="h-5 w-5 text-primary" />
             M-Pesa Checkout
           </DialogTitle>
           <DialogDescription>
-            Pay KES {totalPrice.toLocaleString()} to <span className="font-semibold text-primary">GoMall</span> via M-Pesa
+            Pay <span className="font-semibold text-primary">GoMall</span> securely via M-Pesa
           </DialogDescription>
         </DialogHeader>
 
@@ -92,17 +101,7 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
           <div className="flex flex-col items-center gap-4 py-6 text-center">
             <CheckCircle className="h-16 w-16 text-green-500" />
             <p className="font-heading font-semibold text-lg">STK Push Sent!</p>
-            <p className="text-muted-foreground text-sm">Check your phone and enter your M-Pesa PIN to complete the payment.</p>
-            <Button onClick={handleClose} className="w-full bg-gradient-primary text-primary-foreground">
-              Done
-            </Button>
-            <Link
-              to={`/orders?phone=${encodeURIComponent(orderPhone)}`}
-              onClick={handleClose}
-              className="text-sm text-primary underline hover:text-primary/80"
-            >
-              Track your order →
-            </Link>
+            <p className="text-muted-foreground text-sm">Redirecting to your order confirmation...</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -114,9 +113,22 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
                     <span className="font-medium">KES {(item.price * item.quantity).toLocaleString()}</span>
                   </div>
                 ))}
+                <div className="flex justify-between text-sm pt-2 border-t border-border">
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="font-medium">KES {totalPrice.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground flex items-center gap-1">
+                    <Truck className="h-3.5 w-3.5" /> Delivery
+                    {county && <span className="text-xs">({getDeliveryEstimate(county)})</span>}
+                  </span>
+                  <span className="font-medium">
+                    {county ? `KES ${deliveryFee.toLocaleString()}` : "Select county"}
+                  </span>
+                </div>
                 <div className="flex justify-between pt-2 border-t border-border font-bold">
                   <span>Total</span>
-                  <span className="text-primary">KES {totalPrice.toLocaleString()}</span>
+                  <span className="text-primary">KES {grandTotal.toLocaleString()}</span>
                 </div>
               </div>
 
@@ -183,7 +195,7 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Sending STK Push...
                 </>
               ) : (
-                `Pay KES ${totalPrice.toLocaleString()} to GoMall`
+                `Pay KES ${grandTotal.toLocaleString()} to GoMall`
               )}
             </Button>
           </form>
