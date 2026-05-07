@@ -20,6 +20,7 @@ export type Database = {
           county: string | null
           created_at: string
           delivery_address: string | null
+          delivery_fee: number
           id: string
           items: Json
           mpesa_receipt: string | null
@@ -34,6 +35,7 @@ export type Database = {
           county?: string | null
           created_at?: string
           delivery_address?: string | null
+          delivery_fee?: number
           id?: string
           items?: Json
           mpesa_receipt?: string | null
@@ -48,6 +50,7 @@ export type Database = {
           county?: string | null
           created_at?: string
           delivery_address?: string | null
+          delivery_fee?: number
           id?: string
           items?: Json
           mpesa_receipt?: string | null
