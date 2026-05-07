@@ -95,6 +95,7 @@ Deno.serve(async (req) => {
         .insert({
           phone_number: formattedPhone,
           total_amount: Math.round(amount),
+          delivery_fee: Math.round(Number(delivery_fee) || 0),
           status: "pending",
           checkout_request_id: stkData.CheckoutRequestID,
           items: items || [],
