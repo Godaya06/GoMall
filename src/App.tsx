@@ -14,6 +14,7 @@ import Wishlist from "./pages/Wishlist.tsx";
 import Auth from "./pages/Auth.tsx";
 import Search from "./pages/Search.tsx";
 import Categories from "./pages/Categories.tsx";
+import OrderConfirmation from "./pages/OrderConfirmation.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/care/:id" element={<ProductCareDetail />} />
                 <Route path="/orders" element={<OrderTracking />} />
+                <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
                 <Route path="/wishlist" element={<Wishlist />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/categories" element={<Categories />} />

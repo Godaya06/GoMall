@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { phone, amount, items, county, town, delivery_address } = await req.json();
+    const { phone, amount, items, county, town, delivery_address, delivery_fee } = await req.json();
 
     if (!phone || !amount) {
       return new Response(JSON.stringify({ error: "Phone and amount are required" }), {
@@ -95,6 +95,7 @@ Deno.serve(async (req) => {
         .insert({
           phone_number: formattedPhone,
           total_amount: Math.round(amount),
+          delivery_fee: Math.round(Number(delivery_fee) || 0),
           status: "pending",
           checkout_request_id: stkData.CheckoutRequestID,
           items: items || [],
