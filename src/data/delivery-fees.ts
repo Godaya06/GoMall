@@ -4,17 +4,17 @@
 type Tier = "metro" | "nearby" | "regional" | "remote";
 
 const COUNTY_TIER: Record<string, Tier> = {
-  Nairobi: "metro",
-  Kiambu: "nearby", Kajiado: "nearby", Machakos: "nearby", Murang'a: "nearby",
-  Mombasa: "regional", Nakuru: "regional", Kisumu: "regional", Uasin Gishu: "regional",
-  Nyeri: "regional", Meru: "regional", Embu: "regional", Kakamega: "regional",
-  Kilifi: "regional", Kericho: "regional", Bungoma: "regional", Trans Nzoia: "regional",
-  Kirinyaga: "regional", Nyandarua: "regional", Laikipia: "regional", Bomet: "regional",
-  Nandi: "regional", Vihiga: "regional", Busia: "regional", Siaya: "regional",
-  Homa Bay: "regional", Migori: "regional", Kisii: "regional", Nyamira: "regional",
-  Narok: "regional", Baringo: "regional", Elgeyo-Marakwet: "regional", Kitui: "regional",
-  Makueni: "regional", Tharaka-Nithi: "regional", Kwale: "regional", Taita-Taveta: "regional",
-} as Record<string, Tier>;
+  "Nairobi": "metro",
+  "Kiambu": "nearby", "Kajiado": "nearby", "Machakos": "nearby", "Murang'a": "nearby",
+  "Mombasa": "regional", "Nakuru": "regional", "Kisumu": "regional", "Uasin Gishu": "regional",
+  "Nyeri": "regional", "Meru": "regional", "Embu": "regional", "Kakamega": "regional",
+  "Kilifi": "regional", "Kericho": "regional", "Bungoma": "regional", "Trans Nzoia": "regional",
+  "Kirinyaga": "regional", "Nyandarua": "regional", "Laikipia": "regional", "Bomet": "regional",
+  "Nandi": "regional", "Vihiga": "regional", "Busia": "regional", "Siaya": "regional",
+  "Homa Bay": "regional", "Migori": "regional", "Kisii": "regional", "Nyamira": "regional",
+  "Narok": "regional", "Baringo": "regional", "Elgeyo-Marakwet": "regional", "Kitui": "regional",
+  "Makueni": "regional", "Tharaka-Nithi": "regional", "Kwale": "regional", "Taita-Taveta": "regional",
+};
 
 const TIER_FEES: Record<Tier, number> = {
   metro: 200,
