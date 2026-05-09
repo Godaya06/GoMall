@@ -14,6 +14,10 @@ interface Order {
   id: string;
   phone_number: string;
   total_amount: number;
+  delivery_fee: number;
+  county: string | null;
+  town: string | null;
+  delivery_address: string | null;
   status: string;
   mpesa_receipt: string | null;
   items: any[];
