@@ -15,6 +15,7 @@ import Auth from "./pages/Auth.tsx";
 import Search from "./pages/Search.tsx";
 import Categories from "./pages/Categories.tsx";
 import OrderConfirmation from "./pages/OrderConfirmation.tsx";
+import Admin from "./pages/Admin.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
                 <Route path="/search" element={<Search />} />
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/admin" element={<Admin />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

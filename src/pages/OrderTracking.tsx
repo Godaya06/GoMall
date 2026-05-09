@@ -14,6 +14,10 @@ interface Order {
   id: string;
   phone_number: string;
   total_amount: number;
+  delivery_fee: number;
+  county: string | null;
+  town: string | null;
+  delivery_address: string | null;
   status: string;
   mpesa_receipt: string | null;
   items: any[];
@@ -126,7 +130,22 @@ const OrderTracking = () => {
                       </div>
                     ))}
                   </div>
+                  {(order.county || order.town || order.delivery_address) && (
+                    <div className="bg-secondary/30 rounded-lg p-3 text-sm">
+                      <p className="text-xs text-muted-foreground mb-1">Delivery Address</p>
+                      <p className="font-medium">
+                        {order.town || "—"}{order.county ? `, ${order.county}` : ""}
+                      </p>
+                      {order.delivery_address && (
+                        <p className="text-xs text-muted-foreground mt-1">{order.delivery_address}</p>
+                      )}
+                    </div>
+                  )}
                   <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Delivery Fee</span>
+                    <span className="font-medium">KES {Number(order.delivery_fee || 0).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-sm pt-2 border-t border-border">
                     <span className="text-muted-foreground">Total</span>
                     <span className="font-bold text-primary">KES {Number(order.total_amount).toLocaleString()}</span>
                   </div>

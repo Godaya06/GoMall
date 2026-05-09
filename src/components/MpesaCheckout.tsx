@@ -32,12 +32,22 @@ const MpesaCheckout = ({ open, onOpenChange }: MpesaCheckoutProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone || phone.replace(/\s/g, "").length < 9) {
-      toast({ title: "Invalid phone number", description: "Enter a valid M-Pesa number", variant: "destructive" });
+    const cleanPhone = phone.replace(/\s|-/g, "");
+    const phoneOk = /^(\+?254|0)(7|1)\d{8}$/.test(cleanPhone);
+    if (!phoneOk) {
+      toast({ title: "Invalid phone number", description: "Use a Safaricom format like 0712345678 or 254712345678", variant: "destructive" });
       return;
     }
-    if (!county || !town.trim()) {
-      toast({ title: "Delivery location required", description: "Select your county and enter your town", variant: "destructive" });
+    if (!county) {
+      toast({ title: "County required", description: "Select your delivery county", variant: "destructive" });
+      return;
+    }
+    if (!town.trim() || town.trim().length < 2) {
+      toast({ title: "Town required", description: "Enter your town or area (min 2 characters)", variant: "destructive" });
+      return;
+    }
+    if (address.trim() && address.trim().length < 5) {
+      toast({ title: "Address too short", description: "Provide at least 5 characters or leave blank", variant: "destructive" });
       return;
     }
 
