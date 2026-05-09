@@ -8,6 +8,14 @@ import bodyLotionImg from "@/assets/body-lotion.png";
 import sunscreenImg from "@/assets/sunscreen.png";
 import makeupImg from "@/assets/makeup.png";
 import makeupEyesImg from "@/assets/makeup-eyes.png";
+import keGeishaSoap from "@/assets/ke-geisha-soap.png";
+import keMariniConditioner from "@/assets/ke-marini-conditioner.png";
+import keMovitJelly from "@/assets/ke-movit-jelly.png";
+import keNiceLovelyLotion from "@/assets/ke-nice-lovely-lotion.png";
+import keSheaButter from "@/assets/ke-shea-butter.png";
+import keCoconutOil from "@/assets/ke-coconut-oil.png";
+import keSuzieLipstick from "@/assets/ke-suzie-lipstick.png";
+import keBlackSoap from "@/assets/ke-black-soap.png";
 
 export interface Product {
   id: string;
@@ -32,6 +40,7 @@ export const personalCareCategories = [
   "Lotions",
   "Sunscreen",
   "Makeup",
+  "Kenyan Markets",
 ] as const;
 
 export const personalCareProducts: Product[] = [
@@ -419,6 +428,104 @@ export const personalCareProducts: Product[] = [
     details: ["6 Shades", "Cream & Powder", "Pro-Level"],
     ingredients: "Mica, Talc, Jojoba Oil, Silica, Iron Oxides, Gold Mica",
     howToUse: "Use darker shades to contour jawline, cheekbones, and nose. Apply highlight to high points of face.",
+  },
+
+  // ─── Kenyan Markets ────────────────────────
+  {
+    id: "ke-geisha-soap",
+    name: "Geisha Floral Beauty Soap",
+    price: 75,
+    image: keGeishaSoap,
+    category: "Kenyan Markets",
+    description:
+      "Iconic Kenyan beauty bar loved across East Africa. Gentle floral fragrance soap that cleanses and softens skin for everyday use.",
+    details: ["125g", "Floral Scent", "Made in Kenya"],
+    ingredients: "Sodium Palmate, Glycerin, Floral Fragrance, Vitamin E",
+    howToUse: "Lather with water and massage onto wet skin. Rinse thoroughly. Use daily in shower or bath.",
+  },
+  {
+    id: "ke-movit-jelly",
+    name: "Movit Petroleum Jelly",
+    price: 180,
+    image: keMovitJelly,
+    category: "Kenyan Markets",
+    description:
+      "Trusted East African petroleum jelly that locks in moisture, soothes dry skin, and protects lips, elbows and knees from cracking.",
+    details: ["100g", "All Skin Types", "Family Size"],
+    ingredients: "Petroleum Jelly, Vitamin E, Mineral Oil",
+    howToUse: "Scoop a small amount and massage onto dry areas of the body, lips, or hair tips as needed.",
+  },
+  {
+    id: "ke-nice-lovely-lotion",
+    name: "Nice & Lovely Cocoa Butter Lotion",
+    price: 320,
+    image: keNiceLovelyLotion,
+    category: "Kenyan Markets",
+    description:
+      "Kenya's favourite everyday body lotion. Cocoa butter formula keeps skin soft, smooth and evenly toned all day long.",
+    details: ["400ml", "Cocoa Butter", "Made in Kenya"],
+    ingredients: "Cocoa Butter, Glycerin, Shea Butter, Vitamin E, Aqua",
+    howToUse: "Apply generously to clean skin after a shower. Reapply throughout the day on dry areas.",
+  },
+  {
+    id: "ke-marini-conditioner",
+    name: "Marini Naturals Leave-In Conditioner",
+    price: 950,
+    image: keMariniConditioner,
+    category: "Kenyan Markets",
+    description:
+      "Proudly Kenyan haircare. A rich leave-in conditioner formulated for natural, kinky and curly African hair to lock in moisture and define curls.",
+    details: ["250ml", "For Natural Hair", "Sulphate-Free"],
+    ingredients: "Shea Butter, Coconut Oil, Aloe Vera, Castor Oil, Argan Oil",
+    howToUse: "Apply on damp, freshly washed hair. Work through from root to tip and style as desired. Do not rinse.",
+  },
+  {
+    id: "ke-shea-butter",
+    name: "Pure Baringo Shea Butter",
+    price: 650,
+    image: keSheaButter,
+    category: "Kenyan Markets",
+    description:
+      "Raw, unrefined shea butter sourced from women's cooperatives in Baringo. Deeply nourishes skin, hair, lips and cuticles.",
+    details: ["200g", "100% Raw", "Sourced in Baringo"],
+    ingredients: "100% Raw Unrefined Shea Butter (Vitellaria paradoxa)",
+    howToUse: "Scoop a small amount, warm between palms until melted, and massage into skin or hair.",
+  },
+  {
+    id: "ke-coconut-oil",
+    name: "Coast Pure Coconut Oil",
+    price: 480,
+    image: keCoconutOil,
+    category: "Kenyan Markets",
+    description:
+      "Cold-pressed coconut oil from Kenya's coast. A versatile oil for body moisturising, hair masks, and oil pulling.",
+    details: ["250ml", "Cold-Pressed", "Multi-Use"],
+    ingredients: "100% Pure Coconut Oil (Cocos nucifera)",
+    howToUse: "Use as a body oil after shower, a deep-conditioning hair mask, or a gentle makeup remover.",
+  },
+  {
+    id: "ke-suzie-lipstick",
+    name: "Suzie Beauty Matte Lipstick",
+    price: 850,
+    image: keSuzieLipstick,
+    category: "Kenyan Markets",
+    description:
+      "Long-wearing matte lipstick from Kenya's homegrown beauty brand Suzie Beauty. Bold pigment that flatters African skin tones.",
+    details: ["3.5g", "Matte Finish", "Cruelty-Free"],
+    ingredients: "Castor Oil, Carnauba Wax, Vitamin E, Cosmetic Pigments",
+    howToUse: "Apply directly from the bullet to clean lips. Blot and reapply for a deeper, longer-lasting finish.",
+  },
+  {
+    id: "ke-black-soap",
+    name: "Handmade African Black Soap",
+    price: 350,
+    image: keBlackSoap,
+    category: "Kenyan Markets",
+    description:
+      "Traditional African black soap handcrafted in Kenya and wrapped in banana leaf. Cleanses deeply, evens tone and helps clear blemishes.",
+    details: ["150g", "Handmade", "Banana Leaf Wrap"],
+    ingredients: "Plantain Ash, Cocoa Pod Ash, Shea Butter, Coconut Oil, Palm Oil",
+    howToUse: "Wet a small piece, lather between hands, and massage onto face or body. Rinse and follow with moisturiser.",
   },
 ]
   export const products = [
