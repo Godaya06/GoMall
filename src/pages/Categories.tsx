@@ -60,6 +60,37 @@ const Categories = () => {
             ))}
           </div>
         </section>
+
+        <section className="mt-12">
+          <h2 className="flex items-center gap-2 font-heading text-xl font-semibold mb-4">
+            <ShoppingBag className="h-5 w-5 text-primary" /> Marketplace
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {marketplaceCategories
+              .filter((c) => c !== "All")
+              .map((cat) => {
+                const count = marketplaceProducts.filter((p) => p.category === cat).length;
+                const image = marketplaceProducts.find((p) => p.category === cat)?.image;
+                return (
+                  <Link
+                    key={cat}
+                    to="/?tab=marketplace"
+                    className="group bg-card rounded-2xl border border-border p-4 hover:border-primary/40 transition-all text-center"
+                  >
+                    {image && (
+                      <img
+                        src={image}
+                        alt={cat}
+                        className="h-24 w-auto mx-auto object-contain mb-3 group-hover:scale-105 transition-transform"
+                      />
+                    )}
+                    <p className="font-semibold text-sm">{cat}</p>
+                    <p className="text-xs text-muted-foreground">{count} products</p>
+                  </Link>
+                );
+              })}
+          </div>
+        </section>
       </div>
       <Footer />
       <CartDrawer />
