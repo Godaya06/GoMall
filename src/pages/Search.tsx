@@ -100,6 +100,25 @@ const SearchPage = () => {
           </section>
         )}
 
+        {results.marketplace.length > 0 && (
+          <section className="mt-10">
+            <h2 className="font-heading text-xl font-semibold mb-4">Marketplace</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {results.marketplace.map((p) => (
+                <div
+                  key={p.id}
+                  className="bg-card rounded-xl border border-border p-4 hover:border-primary/40 transition-all"
+                >
+                  <img src={p.image} alt={p.name} className="h-32 w-auto mx-auto object-contain mb-3" />
+                  <p className="font-semibold text-sm truncate">{p.name}</p>
+                  <p className="text-xs text-muted-foreground mb-1">{p.category}</p>
+                  <p className="text-primary font-bold text-sm">KES {p.price.toLocaleString()}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {q && total === 0 && (
           <p className="text-center text-muted-foreground py-16">No products matched your search.</p>
         )}
