@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import { Smartphone, Sparkles } from "lucide-react";
+import { Smartphone, Sparkles, ShoppingBag } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import { phones } from "@/data/phones";
 import { personalCareProducts, personalCareCategories } from "@/data/products";
+import { marketplaceProducts, marketplaceCategories } from "@/data/marketplace";
 
 const Categories = () => {
   const careCounts = personalCareCategories
