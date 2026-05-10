@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import { phones } from "@/data/phones";
 import { personalCareProducts } from "@/data/products";
+import { marketplaceProducts } from "@/data/marketplace";
 
 const SearchPage = () => {
   const [params, setParams] = useSearchParams();
@@ -13,7 +14,7 @@ const SearchPage = () => {
 
   const results = useMemo(() => {
     const query = q.trim().toLowerCase();
-    if (!query) return { phones: [], care: [] };
+    if (!query) return { phones: [], care: [], marketplace: [] };
     return {
       phones: phones.filter(
         (p) =>
@@ -27,10 +28,16 @@ const SearchPage = () => {
           p.category.toLowerCase().includes(query) ||
           p.description.toLowerCase().includes(query)
       ),
+      marketplace: marketplaceProducts.filter(
+        (p) =>
+          p.name.toLowerCase().includes(query) ||
+          p.category.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query)
+      ),
     };
   }, [q]);
 
-  const total = results.phones.length + results.care.length;
+  const total = results.phones.length + results.care.length + results.marketplace.length;
 
   return (
     <div className="min-h-screen">
