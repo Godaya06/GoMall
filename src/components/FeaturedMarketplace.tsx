@@ -1,0 +1,152 @@
+import { useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { ShoppingCart, ArrowUpDown, Search, Tag } from "lucide-react";
+import WishlistButton from "@/components/WishlistButton";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/context/CartContext";
+import { marketplaceProducts, marketplaceCategories } from "@/data/marketplace";
+
+type SortOption = "default" | "price-asc" | "price-desc";
+
+const FeaturedMarketplace = () => {
+  const { addItem } = useCart();
+  const [active, setActive] = useState<string>("All");
+  const [sort, setSort] = useState<SortOption>("default");
+  const [search, setSearch] = useState("");
+
+  const filtered = useMemo(() => {
+    let list = active === "All" ? marketplaceProducts : marketplaceProducts.filter((p) => p.category === active);
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter((p) => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+    }
+    if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
+    if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
+    return list;
+  }, [active, sort, search]);
+
+  return (
+    <section id="marketplace" className="py-24">
+      <div className="container">
+        <div className="text-center mb-10">
+          <h2 className="font-heading text-4xl font-bold mb-4">
+            Trending in <span className="text-gradient">Kenya</span>
+          </h2>
+          <p className="text-muted-foreground max-w-md mx-auto">
+            Hot picks across electronics, automotive, kitchen, fashion, baby care and more.
+          </p>
+        </div>
+
+        <div className="relative max-w-md mx-auto mb-8">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search marketplace... e.g. earbuds, air fryer"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 rounded-full bg-secondary/50 border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
+          />
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {marketplaceCategories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActive(cat)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 border ${
+                active === cat
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-secondary/50 text-muted-foreground border-border hover:border-primary/40"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex justify-center gap-2 mb-12">
+          {([
+            ["default", "Default"],
+            ["price-asc", "Price: Low → High"],
+            ["price-desc", "Price: High → Low"],
+          ] as [SortOption, string][]).map(([value, label]) => (
+            <button
+              key={value}
+              onClick={() => setSort(value)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border ${
+                sort === value
+                  ? "bg-accent text-accent-foreground border-primary/60"
+                  : "bg-secondary/30 text-muted-foreground border-border hover:border-primary/30"
+              }`}
+            >
+              <ArrowUpDown className="h-3 w-3" />
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filtered.map((product, i) => (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05, duration: 0.5 }}
+              className="group relative bg-card rounded-2xl border border-border p-6 card-shadow hover:border-primary/40 transition-all duration-300"
+            >
+              <div className="absolute top-4 right-4 flex items-center gap-2">
+                <WishlistButton productId={product.id} productType="care" className="z-10" />
+                <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
+                  {product.category}
+                </span>
+              </div>
+
+              <div className="flex justify-center py-6">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  loading="lazy"
+                  width={200}
+                  height={200}
+                  className="h-44 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+
+              <h3 className="font-heading text-lg font-semibold mb-1">{product.name}</h3>
+              <div className="flex items-baseline gap-2 mb-2">
+                <p className="text-primary font-bold text-xl">KES {product.price.toLocaleString()}</p>
+                {product.originalPrice && (
+                  <p className="text-muted-foreground text-sm line-through">KES {product.originalPrice.toLocaleString()}</p>
+                )}
+              </div>
+              <p className="text-muted-foreground text-xs mb-3 line-clamp-2">{product.description}</p>
+
+              <div className="flex items-center gap-3 mb-4 py-2 px-3 rounded-lg bg-secondary/50 flex-wrap">
+                {product.details.map((d) => (
+                  <div key={d} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Tag className="h-3 w-3 text-primary/70" />
+                    <span>{d}</span>
+                  </div>
+                ))}
+              </div>
+
+              <Button
+                className="w-full bg-gradient-primary text-primary-foreground font-semibold"
+                onClick={() => addItem({ id: product.id, name: product.name, price: product.price, image: product.image })}
+              >
+                <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+              </Button>
+            </motion.div>
+          ))}
+        </div>
+
+        {filtered.length === 0 && (
+          <p className="text-center text-muted-foreground py-12">No products found in this category.</p>
+        )}
+      </div>
+    </section>
+  );
+};
+
+export default FeaturedMarketplace;
