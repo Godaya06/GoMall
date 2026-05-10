@@ -16,6 +16,12 @@ import keSheaButter from "@/assets/ke-shea-butter.png";
 import keCoconutOil from "@/assets/ke-coconut-oil.png";
 import keSuzieLipstick from "@/assets/ke-suzie-lipstick.png";
 import keBlackSoap from "@/assets/ke-black-soap.png";
+import ceraveHydratingCleanser from "@/assets/cerave-hydrating-cleanser.png";
+import ceraveFoamingCleanser from "@/assets/cerave-foaming-cleanser.png";
+import ceraveMoisturizingCream from "@/assets/cerave-moisturizing-cream.png";
+import ceraveDailyLotion from "@/assets/cerave-daily-lotion.png";
+import ceraveAmSpf from "@/assets/cerave-am-spf.png";
+import ceraveRetinolSerum from "@/assets/cerave-retinol-serum.png";
 
 export interface Product {
   id: string;
@@ -41,6 +47,7 @@ export const personalCareCategories = [
   "Sunscreen",
   "Makeup",
   "Kenyan Markets",
+  "CeraVe",
 ] as const;
 
 export const personalCareProducts: Product[] = [
@@ -526,6 +533,74 @@ export const personalCareProducts: Product[] = [
     details: ["150g", "Handmade", "Banana Leaf Wrap"],
     ingredients: "Plantain Ash, Cocoa Pod Ash, Shea Butter, Coconut Oil, Palm Oil",
     howToUse: "Wet a small piece, lather between hands, and massage onto face or body. Rinse and follow with moisturiser.",
+  },
+
+  // ─── CeraVe ────────────────────────────────
+  {
+    id: "cerave-hydrating-cleanser",
+    name: "CeraVe Hydrating Facial Cleanser",
+    price: 2200,
+    image: ceraveHydratingCleanser,
+    category: "CeraVe",
+    description: "Gentle non-foaming cleanser for normal to dry skin. Removes dirt and makeup without disrupting the skin barrier. Developed with dermatologists.",
+    details: ["236ml", "Normal–Dry", "Fragrance-free"],
+    ingredients: "Ceramides 1, 3, 6-II, Hyaluronic Acid, Glycerin, Niacinamide",
+    howToUse: "Wet skin with lukewarm water. Massage onto face in circular motions. Rinse thoroughly.",
+  },
+  {
+    id: "cerave-foaming-cleanser",
+    name: "CeraVe Foaming Facial Cleanser",
+    price: 2300,
+    image: ceraveFoamingCleanser,
+    category: "CeraVe",
+    description: "Gel-to-foam cleanser for normal to oily skin. Removes excess oil and dirt while maintaining the skin's natural barrier.",
+    details: ["236ml", "Normal–Oily", "Non-comedogenic"],
+    ingredients: "Ceramides, Niacinamide, Hyaluronic Acid",
+    howToUse: "Apply to wet skin and massage. Rinse with water. Use morning and night.",
+  },
+  {
+    id: "cerave-moisturizing-cream",
+    name: "CeraVe Moisturizing Cream",
+    price: 2800,
+    image: ceraveMoisturizingCream,
+    category: "CeraVe",
+    description: "Rich, non-greasy 24-hour hydration for face and body. Restores the protective skin barrier with three essential ceramides.",
+    details: ["340g", "Face & Body", "24h Hydration"],
+    ingredients: "Ceramides 1, 3, 6-II, Hyaluronic Acid, MVE Technology",
+    howToUse: "Apply liberally to face and body as needed. Best after showering on damp skin.",
+  },
+  {
+    id: "cerave-daily-lotion",
+    name: "CeraVe Daily Moisturizing Lotion",
+    price: 2500,
+    image: ceraveDailyLotion,
+    category: "CeraVe",
+    description: "Lightweight oil-free lotion that hydrates dry skin all day. Pump bottle for easy application.",
+    details: ["355ml", "Lightweight", "Oil-free"],
+    ingredients: "Ceramides, Hyaluronic Acid, Glycerin",
+    howToUse: "Apply to face and body morning and evening. Reapply as needed.",
+  },
+  {
+    id: "cerave-am-spf",
+    name: "CeraVe AM Facial Lotion SPF 30",
+    price: 3200,
+    image: ceraveAmSpf,
+    category: "CeraVe",
+    description: "Daytime moisturizer with broad-spectrum SPF 30 mineral sunscreen. Protects, hydrates and restores the skin barrier.",
+    details: ["52ml", "SPF 30", "Mineral filters"],
+    ingredients: "Zinc Oxide, Titanium Dioxide, Ceramides, Niacinamide",
+    howToUse: "Apply liberally 15 minutes before sun exposure. Reapply every 2 hours.",
+  },
+  {
+    id: "cerave-retinol-serum",
+    name: "CeraVe Resurfacing Retinol Serum",
+    price: 3500,
+    image: ceraveRetinolSerum,
+    category: "CeraVe",
+    description: "Encapsulated retinol serum that smooths skin texture and reduces the appearance of post-acne marks and pores.",
+    details: ["30ml", "Encapsulated Retinol", "Niacinamide"],
+    ingredients: "Encapsulated Retinol, Niacinamide, Ceramides, Licorice Root",
+    howToUse: "Apply 3–4 drops to clean face at night. Follow with moisturizer. Use sunscreen during the day.",
   },
 ]
   export const products = [
