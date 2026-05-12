@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      marketplace_products: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          details: Json | null
+          hidden: boolean
+          id: string
+          image_url: string | null
+          is_custom: boolean
+          name: string | null
+          original_price: number | null
+          price: number | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          details?: Json | null
+          hidden?: boolean
+          id: string
+          image_url?: string | null
+          is_custom?: boolean
+          name?: string | null
+          original_price?: number | null
+          price?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          details?: Json | null
+          hidden?: boolean
+          id?: string
+          image_url?: string | null
+          is_custom?: boolean
+          name?: string | null
+          original_price?: number | null
+          price?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           checkout_request_id: string | null

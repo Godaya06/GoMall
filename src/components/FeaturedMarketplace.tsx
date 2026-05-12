@@ -4,12 +4,13 @@ import { ShoppingCart, ArrowUpDown, Search, Tag } from "lucide-react";
 import WishlistButton from "@/components/WishlistButton";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
-import { marketplaceProducts, marketplaceCategories } from "@/data/marketplace";
+import { useMarketplace } from "@/hooks/useMarketplace";
 
 type SortOption = "default" | "price-asc" | "price-desc";
 
 const FeaturedMarketplace = () => {
   const { addItem } = useCart();
+  const { products: marketplaceProducts, categories: marketplaceCategories } = useMarketplace();
   const [active, setActive] = useState<string>("All");
   const [sort, setSort] = useState<SortOption>("default");
   const [search, setSearch] = useState("");
@@ -23,7 +24,7 @@ const FeaturedMarketplace = () => {
     if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
     if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
     return list;
-  }, [active, sort, search]);
+  }, [active, sort, search, marketplaceProducts]);
 
   return (
     <section id="marketplace" className="py-24">
