@@ -24,7 +24,7 @@ const FeaturedMarketplace = () => {
     if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
     if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
     return list;
-  }, [active, sort, search]);
+  }, [active, sort, search, marketplaceProducts]);
 
   return (
     <section id="marketplace" className="py-24">
