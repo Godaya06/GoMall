@@ -4,12 +4,13 @@ import { ShoppingCart, ArrowUpDown, Search, Tag } from "lucide-react";
 import WishlistButton from "@/components/WishlistButton";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
-import { marketplaceProducts, marketplaceCategories } from "@/data/marketplace";
+import { useMarketplace } from "@/hooks/useMarketplace";
 
 type SortOption = "default" | "price-asc" | "price-desc";
 
 const FeaturedMarketplace = () => {
   const { addItem } = useCart();
+  const { products: marketplaceProducts, categories: marketplaceCategories } = useMarketplace();
   const [active, setActive] = useState<string>("All");
   const [sort, setSort] = useState<SortOption>("default");
   const [search, setSearch] = useState("");
