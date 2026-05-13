@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      marketplace_audit_log: {
+        Row: {
+          action: string
+          after_data: Json | null
+          before_data: Json | null
+          changed_by: string | null
+          created_at: string
+          id: string
+          product_id: string
+          source: string
+        }
+        Insert: {
+          action: string
+          after_data?: Json | null
+          before_data?: Json | null
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          product_id: string
+          source?: string
+        }
+        Update: {
+          action?: string
+          after_data?: Json | null
+          before_data?: Json | null
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          product_id?: string
+          source?: string
+        }
+        Relationships: []
+      }
       marketplace_products: {
         Row: {
           category: string | null
