@@ -403,10 +403,11 @@ const Admin = () => {
           <p className="text-muted-foreground mt-1">Manage orders and marketplace products</p>
         </div>
 
-        <Tabs defaultValue="orders" className="w-full">
+        <Tabs defaultValue="orders" className="w-full" onValueChange={(v) => { if (v === "audit") loadAudit(); }}>
           <TabsList className="mb-6">
             <TabsTrigger value="orders">Orders</TabsTrigger>
             <TabsTrigger value="products">Marketplace Products</TabsTrigger>
+            <TabsTrigger value="audit">Audit Log</TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
