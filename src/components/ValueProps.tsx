@@ -1,11 +1,10 @@
 import { motion } from "framer-motion";
-import { Shield, Truck, RefreshCw, Headphones } from "lucide-react";
+import { Shield, Truck, RefreshCw } from "lucide-react";
 
 const props = [
   { icon: Truck, title: "Free Shipping", desc: "On all orders over $50. Delivered in 2-3 days." },
   { icon: Shield, title: "2-Year Warranty", desc: "Every device backed by our extended protection plan." },
   { icon: RefreshCw, title: "Easy Trade-In", desc: "Get instant credit for your old phone towards a new one." },
-  { icon: Headphones, title: "24/7 Support", desc: "Real humans ready to help, anytime you need us." },
 ];
 
 const ValueProps = () => (

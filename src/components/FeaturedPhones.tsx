@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { phones } from "@/data/phones";
 
-const categories = ["All", "Flagship", "Best Seller", "New", "Popular", "Value", "Budget", "Classic", "Legacy"] as const;
+const categories = ["All", "Flagship", "Best Seller", "Popular", "Value", "Budget", "Classic", "Legacy"] as const;
 type SortOption = "default" | "price-asc" | "price-desc";
 
 const SpecBadge = ({ icon: Icon, label }: { icon: typeof Cpu; label: string }) => (

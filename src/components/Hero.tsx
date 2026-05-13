@@ -15,9 +15,6 @@ const Hero = () => (
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
       >
-        <span className="inline-block px-4 py-1.5 rounded-full border border-primary/30 text-primary text-xs font-medium mb-6 tracking-wide">
-          🔥 New arrivals — Spring 2026
-        </span>
         <h1 className="font-heading text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-6">
           The Future of
           <br />
@@ -33,15 +30,6 @@ const Hero = () => (
           <Button variant="outline" size="lg" className="border-border text-foreground hover:bg-secondary px-8 text-base">
             Trade-In Value
           </Button>
-        </div>
-
-        <div className="flex gap-10 mt-12">
-          {[["50K+", "Happy Customers"], ["4.9★", "App Store Rating"], ["24/7", "Support"]].map(([val, label]) => (
-            <div key={label}>
-              <p className="text-2xl font-heading font-bold text-foreground">{val}</p>
-              <p className="text-xs text-muted-foreground mt-1">{label}</p>
-            </div>
-          ))}
         </div>
       </motion.div>
 
