@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Loader2, Package, RefreshCw, Shield, MapPin, Eye, EyeOff, Pencil, Trash2, Plus, Save, X } from "lucide-react";
+import { Loader2, Package, RefreshCw, Shield, MapPin, Eye, EyeOff, Pencil, Trash2, Plus, Save, X, Upload, Download, History, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -78,6 +78,27 @@ const Admin = () => {
   const { products, reload: reloadProducts, loading: productsLoading } = useMarketplace(true);
   const [editing, setEditing] = useState<EditState | null>(null);
   const [savingProduct, setSavingProduct] = useState(false);
+  const [productSearch, setProductSearch] = useState("");
+  const [productCategory, setProductCategory] = useState<string>("All");
+  const [productVisibility, setProductVisibility] = useState<"all" | "visible" | "hidden">("all");
+  const [auditLog, setAuditLog] = useState<any[]>([]);
+  const [auditLoading, setAuditLoading] = useState(false);
+  const [csvUploading, setCsvUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const logAudit = async (action: string, productId: string, before: any, after: any, source = "manual") => {
+    if (!user) return;
+    await supabase.from("marketplace_audit_log").insert({
+      action, product_id: productId, before_data: before, after_data: after, changed_by: user.id, source,
+    });
+  };
+
+  const loadAudit = async () => {
+    setAuditLoading(true);
+    const { data } = await supabase.from("marketplace_audit_log").select("*").order("created_at", { ascending: false }).limit(200);
+    setAuditLog(data || []);
+    setAuditLoading(false);
+  };
 
   useEffect(() => {
     if (authLoading) return;
@@ -143,6 +164,7 @@ const Admin = () => {
       toast({ title: "Failed", description: error.message, variant: "destructive" });
       return;
     }
+    await logAudit(current ? "unhide" : "hide", id, { hidden: current }, { hidden: !current });
     toast({ title: current ? "Product visible" : "Product hidden" });
     reloadProducts();
   };
@@ -174,6 +196,7 @@ const Admin = () => {
       hidden: editing.hidden,
       is_custom: editing.isCustom,
     };
+    const before = editing.isNew ? null : products.find((p) => p.id === id);
     setSavingProduct(true);
     const { error } = await supabase
       .from("marketplace_products")
@@ -183,6 +206,7 @@ const Admin = () => {
       toast({ title: "Save failed", description: error.message, variant: "destructive" });
       return;
     }
+    await logAudit(editing.isNew ? "create" : "update", id, before, payload);
     toast({ title: "Product saved" });
     setEditing(null);
     reloadProducts();
@@ -190,25 +214,153 @@ const Admin = () => {
 
   const deleteCustom = async (id: string) => {
     if (!confirm("Delete this custom product?")) return;
+    const before = products.find((p) => p.id === id);
     const { error } = await supabase.from("marketplace_products").delete().eq("id", id);
     if (error) {
       toast({ title: "Delete failed", description: error.message, variant: "destructive" });
       return;
     }
+    await logAudit("delete", id, before, null);
     toast({ title: "Product deleted" });
     reloadProducts();
   };
 
   const resetOverride = async (id: string) => {
     if (!confirm("Reset this product to its original values?")) return;
+    const before = products.find((p) => p.id === id);
     const { error } = await supabase.from("marketplace_products").delete().eq("id", id);
     if (error) {
       toast({ title: "Reset failed", description: error.message, variant: "destructive" });
       return;
     }
+    await logAudit("reset", id, before, null);
     toast({ title: "Reset to defaults" });
     reloadProducts();
   };
+
+  // ---- CSV import/export ----
+  const parseCsv = (text: string): Record<string, string>[] => {
+    const rows: string[][] = [];
+    let cur: string[] = [];
+    let field = "";
+    let inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (inQuotes) {
+        if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+        else if (c === '"') inQuotes = false;
+        else field += c;
+      } else {
+        if (c === '"') inQuotes = true;
+        else if (c === ",") { cur.push(field); field = ""; }
+        else if (c === "\n" || c === "\r") {
+          if (field !== "" || cur.length) { cur.push(field); rows.push(cur); cur = []; field = ""; }
+          if (c === "\r" && text[i + 1] === "\n") i++;
+        } else field += c;
+      }
+    }
+    if (field !== "" || cur.length) { cur.push(field); rows.push(cur); }
+    if (!rows.length) return [];
+    const header = rows[0].map((h) => h.trim().toLowerCase());
+    return rows.slice(1).filter((r) => r.some((v) => v.trim() !== "")).map((r) => {
+      const obj: Record<string, string> = {};
+      header.forEach((h, idx) => (obj[h] = (r[idx] ?? "").trim()));
+      return obj;
+    });
+  };
+
+  const downloadCsvTemplate = () => {
+    const header = "id,name,category,price,original_price,image_url,description,details,hidden,is_custom";
+    const sample = `custom-sample-1,Sample Product,Electronics,1999,2499,https://example.com/img.png,A sample product,"item1; item2",false,true`;
+    const blob = new Blob([header + "\n" + sample + "\n"], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "marketplace-template.csv"; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportCsv = () => {
+    const header = ["id","name","category","price","original_price","image_url","description","details","hidden","is_custom"];
+    const esc = (v: any) => {
+      const s = v == null ? "" : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const lines = [header.join(",")];
+    for (const p of products) {
+      lines.push([
+        p.id, p.name, p.category, p.price, p.originalPrice ?? "",
+        p.image, p.description, (p.details || []).join("; "),
+        p.hidden ? "true" : "false", p.isCustom ? "true" : "false",
+      ].map(esc).join(","));
+    }
+    const blob = new Blob([lines.join("\n")], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `marketplace-export-${Date.now()}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleCsvUpload = async (file: File) => {
+    setCsvUploading(true);
+    try {
+      const text = await file.text();
+      const rows = parseCsv(text);
+      if (!rows.length) {
+        toast({ title: "Empty CSV", variant: "destructive" });
+        return;
+      }
+      const payloads: any[] = [];
+      const errors: string[] = [];
+      rows.forEach((r, i) => {
+        const id = (r.id || `custom-${Date.now()}-${i}`).trim();
+        const name = r.name?.trim();
+        if (!name) { errors.push(`Row ${i + 2}: missing name`); return; }
+        payloads.push({
+          id,
+          name,
+          category: r.category || "Electronics",
+          price: r.price ? Number(r.price) : null,
+          original_price: r.original_price ? Number(r.original_price) : null,
+          image_url: r.image_url || null,
+          description: r.description || null,
+          details: r.details ? r.details.split(/[;|]/).map((d) => d.trim()).filter(Boolean) : [],
+          hidden: /^(true|1|yes)$/i.test(r.hidden || ""),
+          is_custom: r.is_custom ? /^(true|1|yes)$/i.test(r.is_custom) : true,
+        });
+      });
+      if (!payloads.length) {
+        toast({ title: "No valid rows", description: errors.join("; "), variant: "destructive" });
+        return;
+      }
+      const { error } = await supabase.from("marketplace_products").upsert(payloads, { onConflict: "id" });
+      if (error) {
+        toast({ title: "Import failed", description: error.message, variant: "destructive" });
+        return;
+      }
+      await Promise.all(payloads.map((p) => logAudit("csv_upsert", p.id, null, p, "csv")));
+      toast({
+        title: `Imported ${payloads.length} products`,
+        description: errors.length ? `${errors.length} skipped` : undefined,
+      });
+      reloadProducts();
+    } catch (e: any) {
+      toast({ title: "CSV error", description: e.message, variant: "destructive" });
+    } finally {
+      setCsvUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const filteredProducts = useMemo(() => {
+    const q = productSearch.trim().toLowerCase();
+    return products.filter((p) => {
+      if (productCategory !== "All" && p.category !== productCategory) return false;
+      if (productVisibility === "visible" && p.hidden) return false;
+      if (productVisibility === "hidden" && !p.hidden) return false;
+      if (q && !`${p.name} ${p.category} ${p.id}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [products, productSearch, productCategory, productVisibility]);
 
   if (authLoading || isAdmin === null) {
     return (
@@ -251,10 +403,11 @@ const Admin = () => {
           <p className="text-muted-foreground mt-1">Manage orders and marketplace products</p>
         </div>
 
-        <Tabs defaultValue="orders" className="w-full">
+        <Tabs defaultValue="orders" className="w-full" onValueChange={(v) => { if (v === "audit") loadAudit(); }}>
           <TabsList className="mb-6">
             <TabsTrigger value="orders">Orders</TabsTrigger>
             <TabsTrigger value="products">Marketplace Products</TabsTrigger>
+            <TabsTrigger value="audit">Audit Log</TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
@@ -352,8 +505,27 @@ const Admin = () => {
 
           <TabsContent value="products">
             <div className="flex justify-between items-center mb-4 gap-3 flex-wrap">
-              <p className="text-sm text-muted-foreground">{products.length} products ({products.filter(p => p.hidden).length} hidden)</p>
-              <div className="flex gap-2">
+              <p className="text-sm text-muted-foreground">
+                {filteredProducts.length} of {products.length} shown ({products.filter(p => p.hidden).length} hidden)
+              </p>
+              <div className="flex gap-2 flex-wrap">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv,text/csv"
+                  className="hidden"
+                  onChange={(e) => e.target.files?.[0] && handleCsvUpload(e.target.files[0])}
+                />
+                <Button onClick={() => fileInputRef.current?.click()} variant="outline" size="sm" disabled={csvUploading}>
+                  {csvUploading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
+                  Upload CSV
+                </Button>
+                <Button onClick={downloadCsvTemplate} variant="ghost" size="sm">
+                  <Download className="h-4 w-4 mr-2" /> Template
+                </Button>
+                <Button onClick={exportCsv} variant="ghost" size="sm">
+                  <Download className="h-4 w-4 mr-2" /> Export
+                </Button>
                 <Button onClick={reloadProducts} variant="outline" size="sm" disabled={productsLoading}>
                   <RefreshCw className={`h-4 w-4 mr-2 ${productsLoading ? "animate-spin" : ""}`} /> Refresh
                 </Button>
@@ -361,6 +533,33 @@ const Admin = () => {
                   <Plus className="h-4 w-4 mr-2" /> Add Product
                 </Button>
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+              <div className="relative md:col-span-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  className="pl-9"
+                  placeholder="Search by name, id, category"
+                  value={productSearch}
+                  onChange={(e) => setProductSearch(e.target.value)}
+                />
+              </div>
+              <Select value={productCategory} onValueChange={setProductCategory}>
+                <SelectTrigger><SelectValue placeholder="Category" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All">All categories</SelectItem>
+                  {categoryOptions.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <Select value={productVisibility} onValueChange={(v: any) => setProductVisibility(v)}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="visible">Visible only</SelectItem>
+                  <SelectItem value="hidden">Hidden only</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {editing && (
@@ -438,9 +637,14 @@ const Admin = () => {
 
             {productsLoading ? (
               <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="text-center py-16">
+                <Package className="h-14 w-14 text-muted-foreground/30 mx-auto mb-4" />
+                <p className="text-muted-foreground">No products match your filters.</p>
+              </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {products.map((p) => (
+                {filteredProducts.map((p) => (
                   <Card key={p.id} className={`bg-card border-border ${p.hidden ? "opacity-60" : ""}`}>
                     <CardContent className="p-4">
                       <div className="flex gap-3">
@@ -472,6 +676,44 @@ const Admin = () => {
                           </Button>
                         )}
                       </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="audit">
+            <div className="flex justify-between items-center mb-4">
+              <p className="text-sm text-muted-foreground">Last 200 marketplace changes</p>
+              <Button onClick={loadAudit} variant="outline" size="sm" disabled={auditLoading}>
+                <RefreshCw className={`h-4 w-4 mr-2 ${auditLoading ? "animate-spin" : ""}`} /> Refresh
+              </Button>
+            </div>
+            {auditLoading ? (
+              <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+            ) : auditLog.length === 0 ? (
+              <div className="text-center py-16">
+                <History className="h-14 w-14 text-muted-foreground/30 mx-auto mb-4" />
+                <p className="text-muted-foreground">No audit entries yet.</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {auditLog.map((a) => (
+                  <Card key={a.id} className="bg-card border-border">
+                    <CardContent className="p-3 flex items-start gap-3 flex-wrap">
+                      <Badge variant="outline" className="uppercase text-xs">{a.action}</Badge>
+                      <Badge variant="outline" className="text-xs bg-secondary/40">{a.source}</Badge>
+                      <code className="text-xs text-muted-foreground">{a.product_id}</code>
+                      <span className="text-xs text-muted-foreground ml-auto">{new Date(a.created_at).toLocaleString()}</span>
+                      {(a.before_data || a.after_data) && (
+                        <details className="w-full mt-1">
+                          <summary className="text-xs cursor-pointer text-muted-foreground">View change</summary>
+                          <pre className="text-xs bg-secondary/30 p-2 rounded mt-1 overflow-auto max-h-48">
+{JSON.stringify({ before: a.before_data, after: a.after_data }, null, 2)}
+                          </pre>
+                        </details>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
