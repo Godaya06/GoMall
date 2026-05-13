@@ -505,8 +505,27 @@ const Admin = () => {
 
           <TabsContent value="products">
             <div className="flex justify-between items-center mb-4 gap-3 flex-wrap">
-              <p className="text-sm text-muted-foreground">{products.length} products ({products.filter(p => p.hidden).length} hidden)</p>
-              <div className="flex gap-2">
+              <p className="text-sm text-muted-foreground">
+                {filteredProducts.length} of {products.length} shown ({products.filter(p => p.hidden).length} hidden)
+              </p>
+              <div className="flex gap-2 flex-wrap">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv,text/csv"
+                  className="hidden"
+                  onChange={(e) => e.target.files?.[0] && handleCsvUpload(e.target.files[0])}
+                />
+                <Button onClick={() => fileInputRef.current?.click()} variant="outline" size="sm" disabled={csvUploading}>
+                  {csvUploading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
+                  Upload CSV
+                </Button>
+                <Button onClick={downloadCsvTemplate} variant="ghost" size="sm">
+                  <Download className="h-4 w-4 mr-2" /> Template
+                </Button>
+                <Button onClick={exportCsv} variant="ghost" size="sm">
+                  <Download className="h-4 w-4 mr-2" /> Export
+                </Button>
                 <Button onClick={reloadProducts} variant="outline" size="sm" disabled={productsLoading}>
                   <RefreshCw className={`h-4 w-4 mr-2 ${productsLoading ? "animate-spin" : ""}`} /> Refresh
                 </Button>
@@ -514,6 +533,33 @@ const Admin = () => {
                   <Plus className="h-4 w-4 mr-2" /> Add Product
                 </Button>
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+              <div className="relative md:col-span-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  className="pl-9"
+                  placeholder="Search by name, id, category"
+                  value={productSearch}
+                  onChange={(e) => setProductSearch(e.target.value)}
+                />
+              </div>
+              <Select value={productCategory} onValueChange={setProductCategory}>
+                <SelectTrigger><SelectValue placeholder="Category" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All">All categories</SelectItem>
+                  {categoryOptions.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <Select value={productVisibility} onValueChange={(v: any) => setProductVisibility(v)}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="visible">Visible only</SelectItem>
+                  <SelectItem value="hidden">Hidden only</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {editing && (
