@@ -164,6 +164,7 @@ const Admin = () => {
       toast({ title: "Failed", description: error.message, variant: "destructive" });
       return;
     }
+    await logAudit(current ? "unhide" : "hide", id, { hidden: current }, { hidden: !current });
     toast({ title: current ? "Product visible" : "Product hidden" });
     reloadProducts();
   };
@@ -195,6 +196,7 @@ const Admin = () => {
       hidden: editing.hidden,
       is_custom: editing.isCustom,
     };
+    const before = editing.isNew ? null : products.find((p) => p.id === id);
     setSavingProduct(true);
     const { error } = await supabase
       .from("marketplace_products")
@@ -204,6 +206,7 @@ const Admin = () => {
       toast({ title: "Save failed", description: error.message, variant: "destructive" });
       return;
     }
+    await logAudit(editing.isNew ? "create" : "update", id, before, payload);
     toast({ title: "Product saved" });
     setEditing(null);
     reloadProducts();
@@ -211,25 +214,153 @@ const Admin = () => {
 
   const deleteCustom = async (id: string) => {
     if (!confirm("Delete this custom product?")) return;
+    const before = products.find((p) => p.id === id);
     const { error } = await supabase.from("marketplace_products").delete().eq("id", id);
     if (error) {
       toast({ title: "Delete failed", description: error.message, variant: "destructive" });
       return;
     }
+    await logAudit("delete", id, before, null);
     toast({ title: "Product deleted" });
     reloadProducts();
   };
 
   const resetOverride = async (id: string) => {
     if (!confirm("Reset this product to its original values?")) return;
+    const before = products.find((p) => p.id === id);
     const { error } = await supabase.from("marketplace_products").delete().eq("id", id);
     if (error) {
       toast({ title: "Reset failed", description: error.message, variant: "destructive" });
       return;
     }
+    await logAudit("reset", id, before, null);
     toast({ title: "Reset to defaults" });
     reloadProducts();
   };
+
+  // ---- CSV import/export ----
+  const parseCsv = (text: string): Record<string, string>[] => {
+    const rows: string[][] = [];
+    let cur: string[] = [];
+    let field = "";
+    let inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (inQuotes) {
+        if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+        else if (c === '"') inQuotes = false;
+        else field += c;
+      } else {
+        if (c === '"') inQuotes = true;
+        else if (c === ",") { cur.push(field); field = ""; }
+        else if (c === "\n" || c === "\r") {
+          if (field !== "" || cur.length) { cur.push(field); rows.push(cur); cur = []; field = ""; }
+          if (c === "\r" && text[i + 1] === "\n") i++;
+        } else field += c;
+      }
+    }
+    if (field !== "" || cur.length) { cur.push(field); rows.push(cur); }
+    if (!rows.length) return [];
+    const header = rows[0].map((h) => h.trim().toLowerCase());
+    return rows.slice(1).filter((r) => r.some((v) => v.trim() !== "")).map((r) => {
+      const obj: Record<string, string> = {};
+      header.forEach((h, idx) => (obj[h] = (r[idx] ?? "").trim()));
+      return obj;
+    });
+  };
+
+  const downloadCsvTemplate = () => {
+    const header = "id,name,category,price,original_price,image_url,description,details,hidden,is_custom";
+    const sample = `custom-sample-1,Sample Product,Electronics,1999,2499,https://example.com/img.png,A sample product,"item1; item2",false,true`;
+    const blob = new Blob([header + "\n" + sample + "\n"], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "marketplace-template.csv"; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportCsv = () => {
+    const header = ["id","name","category","price","original_price","image_url","description","details","hidden","is_custom"];
+    const esc = (v: any) => {
+      const s = v == null ? "" : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const lines = [header.join(",")];
+    for (const p of products) {
+      lines.push([
+        p.id, p.name, p.category, p.price, p.originalPrice ?? "",
+        p.image, p.description, (p.details || []).join("; "),
+        p.hidden ? "true" : "false", p.isCustom ? "true" : "false",
+      ].map(esc).join(","));
+    }
+    const blob = new Blob([lines.join("\n")], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `marketplace-export-${Date.now()}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleCsvUpload = async (file: File) => {
+    setCsvUploading(true);
+    try {
+      const text = await file.text();
+      const rows = parseCsv(text);
+      if (!rows.length) {
+        toast({ title: "Empty CSV", variant: "destructive" });
+        return;
+      }
+      const payloads: any[] = [];
+      const errors: string[] = [];
+      rows.forEach((r, i) => {
+        const id = (r.id || `custom-${Date.now()}-${i}`).trim();
+        const name = r.name?.trim();
+        if (!name) { errors.push(`Row ${i + 2}: missing name`); return; }
+        payloads.push({
+          id,
+          name,
+          category: r.category || "Electronics",
+          price: r.price ? Number(r.price) : null,
+          original_price: r.original_price ? Number(r.original_price) : null,
+          image_url: r.image_url || null,
+          description: r.description || null,
+          details: r.details ? r.details.split(/[;|]/).map((d) => d.trim()).filter(Boolean) : [],
+          hidden: /^(true|1|yes)$/i.test(r.hidden || ""),
+          is_custom: r.is_custom ? /^(true|1|yes)$/i.test(r.is_custom) : true,
+        });
+      });
+      if (!payloads.length) {
+        toast({ title: "No valid rows", description: errors.join("; "), variant: "destructive" });
+        return;
+      }
+      const { error } = await supabase.from("marketplace_products").upsert(payloads, { onConflict: "id" });
+      if (error) {
+        toast({ title: "Import failed", description: error.message, variant: "destructive" });
+        return;
+      }
+      await Promise.all(payloads.map((p) => logAudit("csv_upsert", p.id, null, p, "csv")));
+      toast({
+        title: `Imported ${payloads.length} products`,
+        description: errors.length ? `${errors.length} skipped` : undefined,
+      });
+      reloadProducts();
+    } catch (e: any) {
+      toast({ title: "CSV error", description: e.message, variant: "destructive" });
+    } finally {
+      setCsvUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const filteredProducts = useMemo(() => {
+    const q = productSearch.trim().toLowerCase();
+    return products.filter((p) => {
+      if (productCategory !== "All" && p.category !== productCategory) return false;
+      if (productVisibility === "visible" && p.hidden) return false;
+      if (productVisibility === "hidden" && !p.hidden) return false;
+      if (q && !`${p.name} ${p.category} ${p.id}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [products, productSearch, productCategory, productVisibility]);
 
   if (authLoading || isAdmin === null) {
     return (
