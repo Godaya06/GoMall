@@ -10,7 +10,7 @@ const props = [
 const ValueProps = () => (
   <section className="py-24 border-t border-border">
     <div className="container">
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {props.map((p, i) => (
           <motion.div
             key={p.title}
