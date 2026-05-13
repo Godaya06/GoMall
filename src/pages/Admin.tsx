@@ -78,6 +78,27 @@ const Admin = () => {
   const { products, reload: reloadProducts, loading: productsLoading } = useMarketplace(true);
   const [editing, setEditing] = useState<EditState | null>(null);
   const [savingProduct, setSavingProduct] = useState(false);
+  const [productSearch, setProductSearch] = useState("");
+  const [productCategory, setProductCategory] = useState<string>("All");
+  const [productVisibility, setProductVisibility] = useState<"all" | "visible" | "hidden">("all");
+  const [auditLog, setAuditLog] = useState<any[]>([]);
+  const [auditLoading, setAuditLoading] = useState(false);
+  const [csvUploading, setCsvUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const logAudit = async (action: string, productId: string, before: any, after: any, source = "manual") => {
+    if (!user) return;
+    await supabase.from("marketplace_audit_log").insert({
+      action, product_id: productId, before_data: before, after_data: after, changed_by: user.id, source,
+    });
+  };
+
+  const loadAudit = async () => {
+    setAuditLoading(true);
+    const { data } = await supabase.from("marketplace_audit_log").select("*").order("created_at", { ascending: false }).limit(200);
+    setAuditLog(data || []);
+    setAuditLoading(false);
+  };
 
   useEffect(() => {
     if (authLoading) return;
