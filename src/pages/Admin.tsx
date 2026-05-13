@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Loader2, Package, RefreshCw, Shield, MapPin, Eye, EyeOff, Pencil, Trash2, Plus, Save, X } from "lucide-react";
+import { Loader2, Package, RefreshCw, Shield, MapPin, Eye, EyeOff, Pencil, Trash2, Plus, Save, X, Upload, Download, History, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
