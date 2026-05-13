@@ -637,9 +637,14 @@ const Admin = () => {
 
             {productsLoading ? (
               <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="text-center py-16">
+                <Package className="h-14 w-14 text-muted-foreground/30 mx-auto mb-4" />
+                <p className="text-muted-foreground">No products match your filters.</p>
+              </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {products.map((p) => (
+                {filteredProducts.map((p) => (
                   <Card key={p.id} className={`bg-card border-border ${p.hidden ? "opacity-60" : ""}`}>
                     <CardContent className="p-4">
                       <div className="flex gap-3">
@@ -671,6 +676,44 @@ const Admin = () => {
                           </Button>
                         )}
                       </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="audit">
+            <div className="flex justify-between items-center mb-4">
+              <p className="text-sm text-muted-foreground">Last 200 marketplace changes</p>
+              <Button onClick={loadAudit} variant="outline" size="sm" disabled={auditLoading}>
+                <RefreshCw className={`h-4 w-4 mr-2 ${auditLoading ? "animate-spin" : ""}`} /> Refresh
+              </Button>
+            </div>
+            {auditLoading ? (
+              <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+            ) : auditLog.length === 0 ? (
+              <div className="text-center py-16">
+                <History className="h-14 w-14 text-muted-foreground/30 mx-auto mb-4" />
+                <p className="text-muted-foreground">No audit entries yet.</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {auditLog.map((a) => (
+                  <Card key={a.id} className="bg-card border-border">
+                    <CardContent className="p-3 flex items-start gap-3 flex-wrap">
+                      <Badge variant="outline" className="uppercase text-xs">{a.action}</Badge>
+                      <Badge variant="outline" className="text-xs bg-secondary/40">{a.source}</Badge>
+                      <code className="text-xs text-muted-foreground">{a.product_id}</code>
+                      <span className="text-xs text-muted-foreground ml-auto">{new Date(a.created_at).toLocaleString()}</span>
+                      {(a.before_data || a.after_data) && (
+                        <details className="w-full mt-1">
+                          <summary className="text-xs cursor-pointer text-muted-foreground">View change</summary>
+                          <pre className="text-xs bg-secondary/30 p-2 rounded mt-1 overflow-auto max-h-48">
+{JSON.stringify({ before: a.before_data, after: a.after_data }, null, 2)}
+                          </pre>
+                        </details>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
