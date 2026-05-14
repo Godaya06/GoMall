@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import { phones } from "@/data/phones";
+import { getPhonePricing } from "@/lib/phone-pricing";
 import { personalCareProducts } from "@/data/products";
 import { marketplaceProducts } from "@/data/marketplace";
 
