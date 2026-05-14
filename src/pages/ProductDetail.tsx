@@ -122,9 +122,12 @@ const ProductDetail = () => {
               <Button
                 size="lg"
                 className="w-full bg-gradient-primary text-primary-foreground font-semibold text-base"
-                onClick={() => addItem({ id: phone.id, name: phone.name, price: phone.price, image: phone.image })}
+                onClick={() => {
+                  const { current } = getPhonePricing(phone);
+                  addItem({ id: phone.id, name: phone.name, price: current, image: phone.image });
+                }}
               >
-                <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart — KES {phone.price.toLocaleString()}
+                <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart — KES {getPhonePricing(phone).current.toLocaleString()}
               </Button>
             </motion.div>
           </div>
