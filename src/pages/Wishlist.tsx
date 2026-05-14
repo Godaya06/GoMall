@@ -1,6 +1,7 @@
 import { useWishlist } from "@/context/WishlistContext";
 import { useAuth } from "@/context/AuthContext";
 import { phones } from "@/data/phones";
+import { getPhonePricing } from "@/lib/phone-pricing";
 import { personalCareProducts } from "@/data/products";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
