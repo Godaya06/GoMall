@@ -66,17 +66,23 @@ const SearchPage = () => {
           <section className="mb-10">
             <h2 className="font-heading text-xl font-semibold mb-4">Phones</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {results.phones.map((p) => (
-                <Link
-                  key={p.id}
-                  to={`/product/${p.id}`}
-                  className="bg-card rounded-xl border border-border p-4 hover:border-primary/40 transition-all"
-                >
-                  <img src={p.image} alt={p.name} className="h-32 w-auto mx-auto object-contain mb-3" />
-                  <p className="font-semibold text-sm truncate">{p.name}</p>
-                  <p className="text-primary font-bold text-sm">KES {p.price.toLocaleString()}</p>
-                </Link>
-              ))}
+              {results.phones.map((p) => {
+                const { current, original } = getPhonePricing(p);
+                return (
+                  <Link
+                    key={p.id}
+                    to={`/product/${p.id}`}
+                    className="bg-card rounded-xl border border-border p-4 hover:border-primary/40 transition-all"
+                  >
+                    <img src={p.image} alt={p.name} className="h-32 w-auto mx-auto object-contain mb-3" />
+                    <p className="font-semibold text-sm truncate">{p.name}</p>
+                    <div className="flex items-baseline gap-2 flex-wrap">
+                      <p className="text-primary font-bold text-sm">KES {current.toLocaleString()}</p>
+                      <p className="text-muted-foreground line-through text-xs">KES {original.toLocaleString()}</p>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </section>
         )}
