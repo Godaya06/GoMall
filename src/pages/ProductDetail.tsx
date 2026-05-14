@@ -84,7 +84,16 @@ const ProductDetail = () => {
               className="flex flex-col"
             >
               <h1 className="font-heading text-3xl lg:text-4xl font-bold mb-2">{phone.name}</h1>
-              <p className="text-primary font-bold text-2xl lg:text-3xl mb-4">KES {phone.price.toLocaleString()}</p>
+              {(() => {
+                const { current, original, discountPercent } = getPhonePricing(phone);
+                return (
+                  <div className="flex items-baseline gap-3 flex-wrap mb-4">
+                    <p className="text-primary font-bold text-2xl lg:text-3xl">KES {current.toLocaleString()}</p>
+                    <p className="text-muted-foreground line-through text-base">KES {original.toLocaleString()}</p>
+                    <span className="px-2 py-0.5 rounded-full bg-destructive text-destructive-foreground text-xs font-bold">-{discountPercent}%</span>
+                  </div>
+                );
+              })()}
               <p className="text-muted-foreground leading-relaxed mb-6">{phone.description}</p>
 
               {/* Colors */}
