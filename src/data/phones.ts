@@ -64,7 +64,7 @@ export const phones: Phone[] = [
     name: "iPhone 16",
     price: 149000,
     image: phone3,
-    tag: "New",
+    tag: "Popular",
     ram: "8 GB",
     storage: "256 GB",
     camera: "48 MP",

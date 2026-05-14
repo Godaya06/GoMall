@@ -9,6 +9,7 @@ import CartDrawer from "@/components/CartDrawer";
 import Footer from "@/components/Footer";
 import WishlistButton from "@/components/WishlistButton";
 import ProductReviews from "@/components/ProductReviews";
+import { getPhonePricing } from "@/lib/phone-pricing";
 
 const SpecRow = ({ icon: Icon, label, value }: { icon: typeof Cpu; label: string; value: string }) => (
   <div className="flex items-center gap-3 py-3 border-b border-border last:border-0">
@@ -83,7 +84,16 @@ const ProductDetail = () => {
               className="flex flex-col"
             >
               <h1 className="font-heading text-3xl lg:text-4xl font-bold mb-2">{phone.name}</h1>
-              <p className="text-primary font-bold text-2xl lg:text-3xl mb-4">KES {phone.price.toLocaleString()}</p>
+              {(() => {
+                const { current, original, discountPercent } = getPhonePricing(phone);
+                return (
+                  <div className="flex items-baseline gap-3 flex-wrap mb-4">
+                    <p className="text-primary font-bold text-2xl lg:text-3xl">KES {current.toLocaleString()}</p>
+                    <p className="text-muted-foreground line-through text-base">KES {original.toLocaleString()}</p>
+                    <span className="px-2 py-0.5 rounded-full bg-destructive text-destructive-foreground text-xs font-bold">-{discountPercent}%</span>
+                  </div>
+                );
+              })()}
               <p className="text-muted-foreground leading-relaxed mb-6">{phone.description}</p>
 
               {/* Colors */}
@@ -112,9 +122,12 @@ const ProductDetail = () => {
               <Button
                 size="lg"
                 className="w-full bg-gradient-primary text-primary-foreground font-semibold text-base"
-                onClick={() => addItem({ id: phone.id, name: phone.name, price: phone.price, image: phone.image })}
+                onClick={() => {
+                  const { current } = getPhonePricing(phone);
+                  addItem({ id: phone.id, name: phone.name, price: current, image: phone.image });
+                }}
               >
-                <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart — KES {phone.price.toLocaleString()}
+                <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart — KES {getPhonePricing(phone).current.toLocaleString()}
               </Button>
             </motion.div>
           </div>
