@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { phones } from "@/data/phones";
+import { getPhonePricing } from "@/lib/phone-pricing";
 
 const categories = ["All", "Flagship", "Best Seller", "Popular", "Value", "Budget", "Classic", "Legacy"] as const;
 type SortOption = "default" | "price-asc" | "price-desc";
