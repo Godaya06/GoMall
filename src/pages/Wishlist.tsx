@@ -35,7 +35,7 @@ const Wishlist = () => {
   const wishlistProducts = items.map((item) => {
     if (item.product_type === "phone") {
       const phone = phones.find((p) => p.id === item.product_id);
-      return phone ? { id: phone.id, name: phone.name, price: phone.price, image: phone.image, type: "phone" as const, link: `/product/${phone.id}` } : null;
+      return phone ? { id: phone.id, name: phone.name, price: getPhonePricing(phone).current, image: phone.image, type: "phone" as const, link: `/product/${phone.id}` } : null;
     } else {
       const product = personalCareProducts.find((p) => p.id === item.product_id);
       return product ? { id: product.id, name: product.name, price: product.price, image: product.image, type: "care" as const, link: `/care/${product.id}` } : null;
