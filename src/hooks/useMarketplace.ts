@@ -92,9 +92,14 @@ export const useMarketplace = (includeHidden = false) => {
     });
   }
 
+  // If the network fetch failed, prefer the cached offline snapshot.
+  const finalProducts = offlineFallback.length
+    ? offlineFallback.filter((p) => includeHidden || !p.hidden)
+    : merged;
+
   const categories = Array.from(
-    new Set<string>(["All", ...staticCategories.filter((c) => c !== "All"), ...merged.map((p) => p.category)])
+    new Set<string>(["All", ...staticCategories.filter((c) => c !== "All"), ...finalProducts.map((p) => p.category)])
   );
 
-  return { products: merged, categories, loading, reload, overrides };
+  return { products: finalProducts, categories, loading, reload, overrides };
 };
