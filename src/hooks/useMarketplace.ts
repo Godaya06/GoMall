@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/offline/db";
 import {
   marketplaceProducts as staticProducts,
   marketplaceCategories as staticCategories,
@@ -22,13 +23,25 @@ export interface MarketplaceOverrideRow {
 export const useMarketplace = (includeHidden = false) => {
   const [overrides, setOverrides] = useState<MarketplaceOverrideRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [offlineFallback, setOfflineFallback] = useState<
+    (MarketplaceProduct & { hidden?: boolean; isCustom?: boolean })[]
+  >([]);
 
   const reload = async () => {
     setLoading(true);
-    const { data } = await supabase.from("marketplace_products").select("*");
-    setOverrides((data as MarketplaceOverrideRow[]) || []);
+    const { data, error } = await supabase.from("marketplace_products").select("*");
+    if (error || !data) {
+      // Network / permission issue — hydrate from Dexie cache.
+      const rows = await db.marketplace.toArray();
+      setOfflineFallback(rows.map((r) => r.payload));
+      setOverrides([]);
+    } else {
+      setOverrides((data as MarketplaceOverrideRow[]) || []);
+      setOfflineFallback([]);
+    }
     setLoading(false);
   };
+
 
   useEffect(() => {
     reload();
