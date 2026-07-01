@@ -1,7 +1,7 @@
 import Dexie, { type Table } from "dexie";
 
 export interface CachedRow<T = any> {
-  id: string;
+  id: string | number;
   payload: T;
   updated_at: number;
 }
@@ -12,10 +12,11 @@ export interface MetaRow {
 }
 
 class GoMallCacheDB extends Dexie {
-  phones!: Table<CachedRow, string>;
-  personalCare!: Table<CachedRow, string>;
-  marketplace!: Table<CachedRow, string>;
+  phones!: Table<CachedRow, string | number>;
+  personalCare!: Table<CachedRow, string | number>;
+  marketplace!: Table<CachedRow, string | number>;
   meta!: Table<MetaRow, string>;
+
 
   constructor() {
     super("gomall-cache");
