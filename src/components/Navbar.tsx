@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, ShoppingBag, ShoppingCart, Package, User, LogOut, Heart, Search, LayoutGrid } from "lucide-react";
+import { Menu, X, ShoppingBag, ShoppingCart, Package, User, LogOut, Heart, Search, LayoutGrid, WifiOff } from "lucide-react";
+import { useOnlineStatus } from "@/offline/useOnlineStatus";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
@@ -18,6 +19,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { totalItems, setIsOpen: openCart } = useCart();
   const { user, profile, signOut } = useAuth();
+  const online = useOnlineStatus();
 
   const submitSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +36,14 @@ const Navbar = () => {
           <ShoppingBag className="h-6 w-6 text-primary" />
           <span className="text-gradient">GoMall</span>
         </Link>
+
+        {!online && (
+          <span className="hidden sm:inline-flex items-center gap-1 px-2 py-1 rounded-full bg-destructive/15 text-destructive text-[11px] font-semibold">
+            <WifiOff className="h-3 w-3" /> Offline
+          </span>
+        )}
+
+
 
         <form onSubmit={submitSearch} className="hidden md:flex flex-1 max-w-md relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
