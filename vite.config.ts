@@ -43,8 +43,8 @@ export default defineConfig(({ mode }) => ({
           },
           {
             // Product images and static image assets.
-            urlPattern: ({ request, url }) =>
-              request.destination === "image" && url.origin === self.location.origin,
+            urlPattern: ({ request, sameOrigin }) =>
+              request.destination === "image" && sameOrigin,
             handler: "CacheFirst",
             options: {
               cacheName: "gomall-images",
