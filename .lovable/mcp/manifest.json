@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "gomall-mcp",
+      "version": "0.1.0",
+      "title": "GoMall MCP"
+    },
+    "tools": [
+      {
+        "name": "search_products",
+        "title": "Search products",
+        "description": "Search visible GoMall marketplace products by name/category, optionally filtered by price range. Returns up to 25 matches.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "description": "Free-text search over product name/category.",
+              "type": "string"
+            },
+            "category": {
+              "description": "Filter by category (exact match).",
+              "type": "string"
+            },
+            "max_price": {
+              "description": "Maximum price in KES.",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "min_price": {
+              "description": "Minimum price in KES.",
+              "type": "number",
+              "minimum": 0
+            },
+            "limit": {
+              "description": "Max results (default 25).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_product",
+        "title": "Get product",
+        "description": "Fetch a single GoMall marketplace product by id.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Product id."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_categories",
+        "title": "List categories",
+        "description": "List distinct visible product categories in the GoMall marketplace.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "track_order",
+        "title": "Track order",
+        "description": "Track a GoMall order status by order id. Requires the M-Pesa phone number used at checkout for verification.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "order_id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Order id from checkout confirmation."
+            },
+            "phone": {
+              "type": "string",
+              "minLength": 9,
+              "description": "M-Pesa phone number used at checkout."
+            }
+          },
+          "required": [
+            "order_id",
+            "phone"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
